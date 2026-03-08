@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iStratech — Solutions & Products</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brand:#0b4da2; /* primary */
+      --accent:#00a6ff; /* highlight */
+      --muted:#6b7280;
+      --bg:#f7f9fb;
+      --card:#ffffff;
+      --radius:12px;
+      --max-width:1200px;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#0b1220}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+
+    /* Header */
+    header{background:white;position:sticky;top:0;z-index:60;box-shadow:0 6px 18px rgba(12,20,40,0.06)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:72px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    nav{display:flex;gap:18px;align-items:center}
+    nav a{padding:8px 10px;border-radius:8px;font-weight:600;color:#0b1220}
+    .cta{background:var(--brand);color:white;padding:10px 14px;border-radius:10px;font-weight:700}
+    .menu-toggle{display:none}
+
+    /* Hero */
+    .hero{display:flex;align-items:center;padding:56px 0}
+    .hero-left{flex:1;padding-right:30px}
+    .kicker{display:inline-block;background:#eef6ff;color:var(--brand);padding:8px 12px;border-radius:999px;font-weight:700;margin-bottom:18px}
+    h1{font-size:40px;margin:0 0 12px;line-height:1.05}
+    p.lead{color:var(--muted);font-size:18px;margin:0 0 22px}
+    .hero-actions{display:flex;gap:12px;margin-top:18px}
+    .btn-outline{border:2px solid #e6eefb;padding:10px 14px;border-radius:10px}
+    .hero-right{flex:1}
+    .hero-illustration{background:linear-gradient(180deg, rgba(11,77,162,0.06), rgba(0,166,255,0.02));border-radius:18px;padding:18px}
+    .device-mock{width:100%;height:320px;background-image:url('https://images.unsplash.com/photo-1561414927-6f129f67a9f8?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=aa5c0b1e6d4c3b5f3a1b2f0b9e0b497a');background-size:cover;background-position:center;border-radius:12px;box-shadow:0 10px 30px rgba(12,20,40,0.08)}
+
+    /* Grids */
+    .grid{display:grid;gap:20px}
+    .solutions{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(12,20,40,0.04);}
+    .card h3{margin:10px 0 6px;font-size:18px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Products */
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+    .product{background:white;padding:14px;border-radius:12px;text-align:center}
+    .product img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .product h4{margin:10px 0 4px}
+    .product p{margin:0;color:var(--muted);font-size:13px}
+
+    /* Resources */
+    .resources{display:flex;flex-wrap:wrap;gap:18px}
+    .resource{flex:1 1 280px;padding:14px;background:linear-gradient(90deg,#fff,#f8fbff);border-radius:12px}
+
+    footer{padding:36px 0 80px;background:white;margin-top:40px}
+    .footer-grid{display:flex;gap:24px;flex-wrap:wrap}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .hero{flex-direction:column}
+      nav{display:none}
+      .menu-toggle{display:block}
+      .hero-illustration{width:100%}
+      .topbar{height:64px}
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <div class="logo">
+        <div class="mark">ES</div>
+        <div>
+          <div style="font-weight:800">iStratech</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Solutions • Products • Support</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#products">Products</a>
+        <a href="#resources">Resources</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#contact">Get Quote</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section id="home" class="hero">
+      <div class="hero-left">
+        <div class="kicker">Complete Surveillance & IoT</div>
+        <h1>Smart security. Simple integration. Enterprise-grade reliability.</h1>
+        <p class="lead">Design, install and manage intelligent presence and sensor systems, access control, and video surveillance — for offices, factories and public spaces. Fast deployment, modular hardware, clear pricing.</p>
+        <div class="hero-actions">
+          <a class="cta" href="#contact">Contact Sales</a>
+          <a class="btn-outline" href="#solutions">Explore Solutions</a>
+        </div>
+
+        <div style="margin-top:28px;display:flex;gap:12px;align-items:center">
+          <div style="display:flex;gap:10px;align-items:center">
+            <img src="https://images.unsplash.com/photo-1531497865141-12a1e1fbe9c1?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=14d8b4bf0c4f6c7e1e8d6c0c5a7b6d94" width="48" height="48" style="border-radius:8px;object-fit:cover" alt="partner">
+            <div>
+              <div style="font-weight:700">Trusted by enterprises</div>
+              <div class="small">Manufacturing • Logistics • Retail • Education</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-illustration">
+          <div class="device-mock" role="img" aria-label="product mock"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUTIONS -->
+    <section id="solutions" style="margin-top:44px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
+        <div>
+          <h2 style="margin:0">Solutions</h2>
+          <div class="small">End-to-end systems tailored to your environment</div>
+        </div>
+        <div class="small">See all solutions →</div>
+      </div>
+
+      <div class="grid solutions">
+        <div class="card">
+          <div style="font-weight:800">Video Surveillance</div>
+          <h3>Enterprise NVR & Analytics</h3>
+          <p>High-resolution IP cameras, recording servers, and AI analytics for people counting, perimeter detection and license plate recognition.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:800">Access Control</div>
+          <h3>Secure doors & identity</h3>
+          <p>Card readers, biometric authentication, and cloud management for single or multi-site deployments.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:800">Parking & Traffic</div>
+          <h3>Smart parking systems</h3>
+          <p>Guidance, occupancy sensors, ANPR and integrations with payment & barrier systems.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:800">IoT Sensors</div>
+          <h3>Presence, environment & alerts</h3>
+          <p>Wireless presence detection, environmental sensors and dashboard alerts for operational safety and energy savings.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" style="margin-top:44px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
+        <div>
+          <h2 style="margin:0">Products</h2>
+          <div class="small">Cameras, recorders, and sensors</div>
+        </div>
+        <div class="small">View catalogue →</div>
+      </div>
+
+      <div class="products">
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6dd1b4e6b2b8b7e2c3f6a9a4d9b7d1a0" alt="bullet camera">
+          <h4>Ultra HD Bullet Camera</h4>
+          <p class="small">4K, low-light, weatherproof</p>
+        </div>
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1485217988980-11786ced9454?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f4a3a1b667f1c2d3b4e5f6a7b8c9d0e" alt="dome camera">
+          <h4>Compact Dome Camera</h4>
+          <p class="small">Vandal-resistant, 2MP/8MP options</p>
+        </div>
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4f8b1c2e3d4f5a6b7c8d9e0f1a2345" alt="nvr">
+          <h4>Network Video Recorder</h4>
+          <p class="small">Scalable storage & health monitoring</p>
+        </div>
+        <div class="product">
+          <img src="https://images.unsplash.com/photo-1600267168136-2f9a0c8b7f3b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6" alt="sensor">
+          <h4>Presence Sensor</h4>
+          <p class="small">Battery-friendly, quick install</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" style="margin-top:44px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
+        <div>
+          <h2 style="margin:0">Resources & Support</h2>
+          <div class="small">Manuals, downloads, integrations</div>
+        </div>
+        <div class="small">Support center →</div>
+      </div>
+
+      <div class="resources">
+        <div class="resource">
+          <div style="font-weight:700">Documentation</div>
+          <p class="small">Install guides, datasheets, API references and integration notes for developers and system integrators.</p>
+        </div>
+        <div class="resource">
+          <div style="font-weight:700">Case Studies</div>
+          <p class="small">Real deployments in retail, logistics, and manufacturing — outcomes and ROI.</p>
+        </div>
+        <div class="resource">
+          <div style="font-weight:700">Software & Firmware</div>
+          <p class="small">Latest firmware downloads and release notes to keep systems secure and performant.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" style="margin-top:44px;margin-bottom:30px">
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px" class="card">
+          <h3>Contact Sales</h3>
+          <p class="small">Tell us about your site and we'll propose an architecture, equipment list and quote.</p>
+          <form onsubmit="event.preventDefault();alert('Send form data to your CRM or e-mail address.');">
+            <div style="margin-top:12px"><label class="small">Company</label><input required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
+            <div style="margin-top:12px"><label class="small">Name</label><input required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
+            <div style="margin-top:12px"><label class="small">Email</label><input type="email" required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
+            <div style="margin-top:12px"><label class="small">Message</label><textarea required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb;min-height:100px"></textarea></div>
+            <div style="margin-top:12px;display:flex;gap:8px"><button class="cta" type="submit">Request Quote</button><button class="btn-outline" type="reset">Reset</button></div>
+          </form>
+        </div>
+
+        <div style="flex:1;min-width:300px" class="card">
+          <h3>Office & Support</h3>
+          <p class="small">Sales: +91 22 1234 5678<br>Support: support@istratech.example.com</p>
+          <div style="margin-top:8px" class="small">Address: 101 Industry Park, Rajkot, India</div>
+          <div style="height:180px;margin-top:14px;background:#eef6ff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--brand);font-weight:700">Map placeholder</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap">
+        <div style="max-width:340px">
+          <div style="font-weight:800">iStratech</div>
+          <div class="small" style="margin-top:8px">Solutions and services for commercial video surveillance, access control and IoT sensors.</div>
+        </div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap">
+          <div>
+            <div style="font-weight:700">Products</div>
+            <div class="small" style="margin-top:8px">Cameras<br>NVRs<br>Sensors</div>
+          </div>
+          <div>
+            <div style="font-weight:700">Company</div>
+            <div class="small" style="margin-top:8px">About<br>Careers<br>Contact</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #eef3fb;margin-top:18px;padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <div class="small">© "iStratech" — All rights reserved</div>
+        <div class="small">Privacy & terms</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Small script: mobile nav toggle
+    document.querySelector('.menu-toggle')?.addEventListener('click', function(){
+      const nav = document.querySelector('nav');
+      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.right = '20px';
+      nav.style.top = '72px';
+      nav.style.background = 'white';
+      nav.style.padding = '12px';
+      nav.style.borderRadius = '12px';
+      nav.style.boxShadow = '0 10px 30px rgba(12,20,40,0.08)';
+    });
+  </script>
+</body>
+</html>
