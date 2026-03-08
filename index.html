@@ -1,140 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Istratech Security</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
+:root{
+--brand:#0b4da2;
+--accent:#00a6ff;
+--bg:#f7f9fb;
+--card:#ffffff;
+--muted:#6b7280;
+--radius:12px;
+--max-width:1200px;
+font-family:'Inter',system-ui;
+}
+
+*{box-sizing:border-box}
+
 body{
 margin:0;
-font-family:Inter;
-background:#f7f9fb;
+background:var(--bg);
+color:#111;
+}
+
+.container{
+max-width:var(--max-width);
+margin:auto;
+padding:0 20px;
 }
 
 header{
 background:white;
-padding:16px 40px;
+position:sticky;
+top:0;
+z-index:50;
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+
+.topbar{
 display:flex;
+align-items:center;
 justify-content:space-between;
-align-items:center;
-box-shadow:0 4px 15px rgba(0,0,0,0.06);
+height:72px;
 }
 
-.nav{
+.logo{
+font-weight:800;
+font-size:20px;
+}
+
+nav{
 display:flex;
-gap:25px;
+gap:20px;
 align-items:center;
 }
 
-.nav a{
+nav a{
 text-decoration:none;
 font-weight:600;
-color:#333;
+color:#111;
 }
 
-.dropdown{
-position:relative;
-}
-
-.mega{
-display:none;
-position:absolute;
-top:40px;
-left:0;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.12);
-width:600px;
-grid-template-columns:repeat(3,1fr);
-gap:30px;
-}
-
-.dropdown:hover .mega{
-display:grid;
-}
-
-.mega-col h4{
-margin-bottom:10px;
-}
-
-.mega-col a{
-display:block;
-margin-bottom:6px;
-color:#444;
+.cta{
+background:var(--brand);
+color:white;
+padding:10px 16px;
+border-radius:10px;
 }
 
 .hero{
-height:500px;
-color:white;
 display:flex;
 align-items:center;
-background-size:cover;
-background-position:center;
-animation:hero 18s infinite;
+padding:60px 0;
 }
 
-.hero .container{
-max-width:1100px;
-margin:auto;
+.hero-left{
+flex:1;
+padding-right:30px;
 }
 
-.hero h1{
+.hero-left h1{
 font-size:42px;
 margin-bottom:10px;
 }
 
-@keyframes hero{
-0%{background-image:url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d");}
-33%{background-image:url("https://images.unsplash.com/photo-1498050108023-c5249f4df085");}
-66%{background-image:url("https://images.unsplash.com/photo-1518770660439-4636190af475");}
+.hero-left p{
+color:var(--muted);
+font-size:18px;
 }
 
-.section{
-padding:70px 20px;
-max-width:1100px;
-margin:auto;
+.hero-right{
+flex:1;
+}
+
+.hero-image{
+height:320px;
+background:url("https://images.unsplash.com/photo-1561414927-6f129f67a9f8");
+background-size:cover;
+border-radius:12px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 gap:20px;
+}
+
+.solutions{
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 }
 
 .card{
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
+background:var(--card);
+padding:20px;
+border-radius:var(--radius);
+box-shadow:0 6px 20px rgba(0,0,0,0.05);
 }
 
-.stats{
-background:#0b4da2;
-color:white;
+.card h3{
+margin-top:0;
 }
 
-.carousel{
-display:flex;
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:20px;
-overflow:auto;
 }
 
-.carousel img{
-width:260px;
-border-radius:10px;
+.product img{
+width:100%;
+height:160px;
+object-fit:cover;
+border-radius:8px;
 }
 
 footer{
-background:white;
-padding:40px;
-text-align:center;
 margin-top:60px;
+background:white;
+padding:40px 0;
+}
+
+.small{
+font-size:14px;
+color:var(--muted);
 }
 
 </style>
@@ -144,167 +157,140 @@ margin-top:60px;
 <body>
 
 <header>
+<div class="container topbar">
 
-<h2>Istratech</h2>
+<div class="logo">Istratech</div>
 
-<nav class="nav">
-
+<nav>
 <a href="index.html">Home</a>
-
-<div class="dropdown">
-
-<a href="solutions.html">Solutions ▾</a>
-
-<div class="mega">
-
-<div class="mega-col">
-<h4>Video</h4>
-<a href="#">IP Cameras</a>
-<a href="#">AI Analytics</a>
-<a href="#">Recording Systems</a>
-</div>
-
-<div class="mega-col">
-<h4>Access Control</h4>
-<a href="#">Biometrics</a>
-<a href="#">Card Readers</a>
-<a href="#">Door Controllers</a>
-</div>
-
-<div class="mega-col">
-<h4>Smart Systems</h4>
-<a href="#">Smart Parking</a>
-<a href="#">IoT Sensors</a>
-<a href="#">Environmental Monitoring</a>
-</div>
-
-</div>
-</div>
-
-<div class="dropdown">
-
-<a href="products.html">Products ▾</a>
-
-<div class="mega">
-
-<div class="mega-col">
-<h4>Cameras</h4>
-<a href="#">Bullet Cameras</a>
-<a href="#">Dome Cameras</a>
-<a href="#">PTZ Cameras</a>
-</div>
-
-<div class="mega-col">
-<h4>Recorders</h4>
-<a href="#">NVR Systems</a>
-<a href="#">Storage Servers</a>
-</div>
-
-<div class="mega-col">
-<h4>Sensors</h4>
-<a href="#">Motion Sensors</a>
-<a href="#">Presence Sensors</a>
-<a href="#">Alarm Systems</a>
-</div>
-
-</div>
-</div>
-
+<a href="solutions.html">Solutions</a>
+<a href="products.html">Products</a>
 <a href="support.html">Support</a>
-
+<a class="cta" href="#">Contact</a>
 </nav>
 
+</div>
 </header>
+
+<main class="container">
 
 <section class="hero">
 
-<div class="container">
+<div class="hero-left">
+<h1>Smart security infrastructure for modern organizations</h1>
 
-<h1>Intelligent Security Infrastructure</h1>
+<p>Enterprise surveillance, sensors, and access control systems for factories, offices and public spaces.</p>
 
-<p>Enterprise surveillance systems, sensors and access control for modern organizations.</p>
+<a class="cta" href="#">Contact Sales</a>
 
+</div>
+
+<div class="hero-right">
+<div class="hero-image"></div>
 </div>
 
 </section>
 
-<section class="section">
+<section>
 
-<h2>Industries</h2>
+<h2>Solutions</h2>
 
-<div class="grid">
-
-<div class="card">
-<h3>Factories</h3>
-<p>Industrial monitoring and worker safety systems.</p>
-</div>
+<div class="grid solutions">
 
 <div class="card">
-<h3>Warehouses</h3>
-<p>Logistics surveillance and inventory protection.</p>
+<h3>Video Surveillance</h3>
+<p>AI powered cameras with real time monitoring and analytics.</p>
 </div>
 
 <div class="card">
-<h3>Banks</h3>
-<p>Financial institution surveillance and access control.</p>
+<h3>Access Control</h3>
+<p>Biometric authentication and smart building access systems.</p>
 </div>
 
 <div class="card">
-<h3>Retail</h3>
-<p>Loss prevention and analytics.</p>
+<h3>Smart Parking</h3>
+<p>License plate recognition and intelligent parking guidance.</p>
 </div>
 
-</div>
-
-</section>
-
-<section class="section stats">
-
-<div class="grid">
-
-<div>
-<h2>5000+</h2>
-<p>Installed Cameras</p>
-</div>
-
-<div>
-<h2>350+</h2>
-<p>Clients</p>
-</div>
-
-<div>
-<h2>40+</h2>
-<p>Cities Protected</p>
-</div>
-
-<div>
-<h2>12</h2>
-<p>Years Experience</p>
+<div class="card">
+<h3>IoT Sensors</h3>
+<p>Presence detection and environmental monitoring.</p>
 </div>
 
 </div>
 
 </section>
 
-<section class="section">
+<section style="margin-top:50px">
 
-<h2>Featured Products</h2>
+<h2>Products</h2>
 
-<div class="carousel">
+<div class="products">
 
+<div class="card product">
 <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f">
+<h4>4K Bullet Camera</h4>
+<p class="small">Outdoor AI surveillance camera</p>
+</div>
 
+<div class="card product">
 <img src="https://images.unsplash.com/photo-1555617117-08fda6edc6d0">
+<h4>Dome Camera</h4>
+<p class="small">Compact indoor camera</p>
+</div>
 
+<div class="card product">
 <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c">
+<h4>Network Video Recorder</h4>
+<p class="small">Central recording system</p>
+</div>
+
+<div class="card product">
+<img src="https://images.unsplash.com/photo-1581091215367-59ab6b0d0c82">
+<h4>Presence Sensor</h4>
+<p class="small">Wireless detection sensor</p>
+</div>
 
 </div>
 
 </section>
+
+<section style="margin-top:50px">
+
+<h2>Resources</h2>
+
+<div class="grid solutions">
+
+<div class="card">
+<h3>Documentation</h3>
+<p>Install guides, datasheets and integration docs.</p>
+</div>
+
+<div class="card">
+<h3>Case Studies</h3>
+<p>Real deployments across industries.</p>
+</div>
+
+<div class="card">
+<h3>Software</h3>
+<p>Firmware downloads and updates.</p>
+</div>
+
+</div>
+
+</section>
+
+</main>
 
 <footer>
 
+<div class="container">
+
+<div class="small">
 © Istratech Security
+</div>
+
+</div>
 
 </footer>
 
