@@ -1,361 +1,563 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Everest Security Admin</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Everest Security — Admin (Pixel-Perfect Demo)</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
+:root{
+  --bg1:#062026;
+  --frame:#071419;
+  --panel:#0d1519;
+  --muted:#96a8b8;
+  --accent:#22c55e;
+  --accent-2:#9ef07e;
+  --glass: rgba(255,255,255,0.03);
+  --soft:#07101a;
+  --card-shadow: 0 18px 50px rgba(2,6,23,0.6);
+  --radius:12px;
+}
+*{box-sizing:border-box}
 body{
-margin:0;
-font-family:Arial;
-background:#0f172a;
-color:white;
-display:flex;
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background: linear-gradient(180deg, #02110d 0%, #062026 100%);
+  color:#e7f3f7;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  height:100vh;
 }
 
-/* Sidebar */
+/* outer green frame like tablet photo edge */
+.page-frame{
+  max-width:1400px;
+  margin:22px auto;
+  padding:18px;
+  border-radius:14px;
+  background: linear-gradient(90deg,#00ff6a22, #00ff6ad0);
+  box-shadow: 0 40px 120px rgba(2,10,8,0.6);
+}
 
+/* inner app window */
+.app {
+  display:flex;
+  gap:18px;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(6,8,10,0.95), rgba(5,7,8,0.9));
+  padding:16px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: var(--card-shadow);
+  overflow:hidden;
+}
+
+/* SIDEBAR */
 .sidebar{
-width:220px;
-background:#020617;
-height:100vh;
-padding:20px;
+  width:260px;
+  background:linear-gradient(180deg, rgba(1,4,9,0.9), rgba(2,6,10,0.9));
+  padding:18px;
+  border-radius:8px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  border-right:1px solid rgba(255,255,255,0.02);
+}
+.brand{ color:var(--accent); font-weight:800; font-size:18px; display:flex; gap:10px; align-items:center;}
+.brand .logo-dot{ width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#21c55e,#7ef09c); display:inline-flex; align-items:center; justify-content:center; color:#042017; font-weight:800; }
+
+.searchbox{
+  background:var(--glass);
+  border-radius:8px;
+  padding:8px 10px;
+  color:var(--muted);
+  font-size:13px;
+}
+.menu { margin-top:6px; display:flex; flex-direction:column; gap:6px; }
+.menu .section{ color:var(--muted); font-size:12px; margin-top:8px; letter-spacing:0.6px;}
+.menu a{
+  display:flex; align-items:center; gap:10px; color:#cfe8d6; text-decoration:none; padding:10px; border-radius:8px; font-size:14px;
+}
+.menu a.active{
+  background: linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.04));
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(34,197,94,0.04);
+  transform:translateX(4px);
 }
 
-.sidebar h2{
-color:#22c55e;
+/* CENTER FRAME */
+.center {
+  flex:1;
+  border-radius:8px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
-.sidebar a{
-display:block;
-padding:10px;
-color:#cbd5f5;
-text-decoration:none;
-border-radius:6px;
-margin-top:10px;
+/* header row */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.breadcrumbs{ color:var(--muted); font-size:13px; display:flex; gap:8px; align-items:center; }
+.header h1{ margin:0; font-size:18px; letter-spacing:0.2px; }
+
+/* stats cards row */
+.stats{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:12px;
+}
+.stat{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.02);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.stat:hover{ transform:translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+.stat .label{ color:var(--muted); font-size:12px; }
+.stat .value{ font-weight:800; font-size:20px; color:var(--accent); margin-top:8px; }
+
+/* main content layout (left big + right side) */
+.main-grid{
+  display:grid;
+  grid-template-columns: 1fr 340px;
+  gap:14px;
 }
 
-.sidebar a:hover{
-background:#1e293b;
+/* left column (dense widgets) */
+.left-col{ display:flex; flex-direction:column; gap:12px; }
+
+/* big sales panel */
+.sales-panel{
+  display:grid;
+  grid-template-columns: 360px 1fr;
+  gap:12px;
+  align-items:start;
+  background:linear-gradient(180deg, rgba(10,12,14,0.6), rgba(6,8,10,0.12));
+  padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02);
 }
 
-/* Main */
+/* donut area */
+.donut-area{ background: linear-gradient(180deg, rgba(12,16,20,0.5), rgba(8,10,12,0.06)); padding:10px; border-radius:8px; }
+.donut-holder{ position:relative; width:320px; height:180px; display:flex; align-items:center; justify-content:center; }
+.donut-center{
+  position:absolute; width:120px; height:120px; border-radius:999px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.02);
+}
+.donut-center .big{ font-weight:800; font-size:20px; color:#dffbe6; }
+.donut-legend{ margin-top:8px; color:var(--muted); font-size:13px; display:flex; flex-direction:column; gap:6px; }
 
-.main{
-flex:1;
-padding:20px;
+/* right mini-cards in sales */
+.mini-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:10px; }
+.mini{ background: linear-gradient(180deg, rgba(12,16,20,0.45), rgba(8,10,12,0.06)); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
+.mini .mt{ color:var(--muted); font-size:12px; } .mini .mv{ font-weight:800; margin-top:6px; }
+
+/* profit + small chart */
+.profit-row{ display:flex; gap:10px; margin-top:12px; align-items:center; }
+.profit-box{ flex:1; padding:10px; border-radius:8px; background:linear-gradient(180deg, rgba(6,8,10,0.6), rgba(6,8,10,0.08)); border:1px solid rgba(255,255,255,0.02); }
+
+/* customers table panel */
+.customers-panel{
+  background:linear-gradient(180deg, rgba(10,12,14,0.6), rgba(6,8,10,0.12));
+  padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02);
 }
 
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
+/* table styles */
+.table-wrap{ overflow:auto; max-height:260px; margin-top:10px; }
+table{ width:100%; border-collapse:collapse; color:#e3f7ee; font-size:13px; }
+thead th{ text-align:left; padding:10px; color:var(--muted); font-size:12px; position:sticky; top:0; background:transparent; }
+tbody td{ padding:10px; border-bottom:1px solid rgba(255,255,255,0.03); }
+tbody tr:hover td{ background: linear-gradient(90deg, rgba(34,197,94,0.02), transparent); cursor:pointer; }
+
+/* right column panels */
+.right-col { display:flex; flex-direction:column; gap:12px; }
+.right-panel{ background:linear-gradient(180deg, rgba(10,12,14,0.6), rgba(6,8,10,0.04)); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); }
+.notif-item{ display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.03); }
+.activity-item{ display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.03); }
+.contact-row{ display:flex; gap:10px; align-items:center; padding:8px 0; }
+
+/* avatar small */
+.avatar{ width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#051214; background:linear-gradient(135deg,#dff7d8,#18cc5a); }
+
+/* account slide panel */
+.account-panel{
+  position:fixed;
+  right:28px;
+  top:70px;
+  width:420px;
+  max-height:80vh;
+  background: linear-gradient(180deg, rgba(6,8,10,0.98), rgba(4,6,8,0.95));
+  border-radius:10px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  transform: translateY(28px); opacity:0;
+  transition: all .36s cubic-bezier(.2,.9,.2,1);
+  z-index:90;
+  overflow:auto;
 }
+.account-panel.open{ transform: translateY(0); opacity:1; }
 
-.search{
-background:#1e293b;
-border:none;
-padding:8px;
-border-radius:6px;
-color:white;
+/* tiny indicators arrow up/down */
+.arrow-up{ display:inline-block; width:12px; height:12px; background:linear-gradient(90deg,#22c55e,#9ef07e); clip-path:polygon(50% 0,0 100%,100% 100%); margin-right:6px; }
+.arrow-down{ display:inline-block; width:12px; height:12px; background:linear-gradient(90deg,#ef4444,#ff8a8a); transform:rotate(180deg); clip-path:polygon(50% 0,0 100%,100% 100%); margin-right:6px; }
+
+/* small animations */
+.fadeUp{ animation: fadeUp .5s ease both; }
+@keyframes fadeUp{ from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
+
+/* responsive */
+@media (max-width:1100px){
+  .main-grid{ grid-template-columns: 1fr; }
+  .app{ flex-direction:column; }
+  .sidebar{ width:100%; height:auto; order:2; }
+  .center{ order:1; }
+  .account-panel{ right:12px; width:92%; top:90px; }
 }
-
-/* Cards */
-
-.cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px;
-margin-bottom:20px;
-}
-
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-.card h3{
-color:#94a3b8;
-font-size:14px;
-}
-
-.card p{
-font-size:22px;
-color:#22c55e;
-margin:5px 0;
-}
-
-/* Dashboard grid */
-
-.grid{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:20px;
-}
-
-/* Sales */
-
-.sales{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-}
-
-.customer{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-margin-top:20px;
-}
-
-/* Table */
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #334155;
-}
-
-/* Right panel */
-
-.right{
-display:flex;
-flex-direction:column;
-gap:20px;
-}
-
-.panel{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-}
-
-.activity{
-border-bottom:1px solid #334155;
-padding:8px 0;
-}
-
-.manager{
-display:flex;
-align-items:center;
-gap:10px;
-margin-top:10px;
-}
-
-.avatar{
-width:30px;
-height:30px;
-background:#22c55e;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:12px;
-}
-
 </style>
 </head>
-
 <body>
 
-<div class="sidebar">
+<div class="page-frame">
+  <div class="app fadeUp">
 
-<h2>Everest Admin</h2>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand"><div class="logo-dot">E</div> Everest Admin</div>
+      <div class="searchbox">🔍 Search</div>
 
-<a href="#">Dashboard</a>
-<a href="#">eCommerce</a>
-<a href="#">Analytics</a>
-<a href="#">Customers</a>
+      <nav class="menu">
+        <div class="section">DASHBOARDS</div>
+        <a class="active" href="#">Overview</a>
+        <a href="#">eCommerce</a>
+        <a href="#">Analytics</a>
+        <a href="#">Customers</a>
+        <div class="section">SETTINGS</div>
+        <a href="#">Messages</a>
+        <a href="#">Customer Reviews</a>
+        <a href="#">Help Centre</a>
+      </nav>
 
-<br>
+      <div style="margin-top:auto; color:var(--muted); font-size:13px;">
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></div>
+          <div>Online</div>
+        </div>
+        <div style="margin-top:10px; font-size:12px">Everest Security Pvt. Ltd.</div>
+      </div>
+    </aside>
 
-<b>Settings</b>
+    <!-- CENTER -->
+    <section class="center">
 
-<a href="#">Messages</a>
-<a href="#">Reviews</a>
-<a href="#">Help Center</a>
+      <div class="header">
+        <div>
+          <div class="breadcrumbs">Dashboards / <strong style="color:#dffbe6">Overview</strong></div>
+          <h1>Overview</h1>
+        </div>
 
-</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div style="color:var(--muted); font-size:13px">Today</div>
+          <input placeholder="Search clients or email..." style="background:var(--glass); border-radius:8px; padding:8px 10px; border:1px solid rgba(255,255,255,0.02); color:#cfe8d3;">
+        </div>
+      </div>
 
-<div class="main">
+      <!-- top cards -->
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Net revenue</div>
+          <div class="value">$3,131,021</div>
+          <div class="small-muted" style="color:var(--muted); margin-top:6px;">▲ 0.4% vs last month</div>
+        </div>
 
-<div class="topbar">
+        <div class="stat">
+          <div class="label">ARR</div>
+          <div class="value">$1,511,121</div>
+          <div class="small-muted" style="color:var(--muted); margin-top:6px;">▲ 32% vs last quarter</div>
+        </div>
 
-<h1>Dashboard Overview</h1>
+        <div class="stat">
+          <div class="label">Quarterly revenue goal</div>
+          <div class="value">71%</div>
+          <div class="small-muted" style="color:var(--muted); margin-top:6px;">Goal: $1.1M</div>
+        </div>
 
-<input class="search" placeholder="Search clients or email">
+        <div class="stat">
+          <div class="label">New orders</div>
+          <div class="value">18,221</div>
+          <div class="small-muted" style="color:var(--muted); margin-top:6px;">▲ 11% vs last quarter</div>
+        </div>
+      </div>
 
-</div>
+      <!-- main content grid -->
+      <div class="main-grid">
 
-<!-- Cards -->
+        <!-- LEFT COL -->
+        <div class="left-col">
 
-<div class="cards">
+          <!-- Sales overview -->
+          <div class="sales-panel panel fadeUp">
+            <div class="donut-area">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:700">Sales Overview</div>
+                <div style="font-size:13px; color:var(--muted)">Number of Sales <span style="margin-left:8px;" class="green-pill">102k</span></div>
+              </div>
 
-<div class="card">
-<h3>Net revenue</h3>
-<p>$3,131,021</p>
-<span>↑ 0.4%</span>
-</div>
+              <div class="donut-holder" style="margin-top:10px;">
+                <canvas id="donutChart" width="320" height="180"></canvas>
 
-<div class="card">
-<h3>ARR</h3>
-<p>$1,511,121</p>
-<span>↑ 32%</span>
-</div>
+                <div class="donut-center">
+                  <div style="font-size:13px;color:var(--muted);">Weekly Visits</div>
+                  <div class="big" id="donutCenter">102k</div>
+                </div>
+              </div>
 
-<div class="card">
-<h3>Quarterly goal</h3>
-<p>71%</p>
-</div>
+              <div class="donut-legend">
+                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;background:#22c55e;display:inline-block;border-radius:2px"></span> Electronic — ₹55,640</div>
+                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;background:#60a5fa;display:inline-block;border-radius:2px"></span> Furniture — ₹11,420</div>
+                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;background:#fbbf24;display:inline-block;border-radius:2px"></span> Clothes — ₹1,840</div>
+                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;background:#ef4444;display:inline-block;border-radius:2px"></span> Shoes — ₹2,120</div>
+              </div>
+            </div>
 
-<div class="card">
-<h3>New orders</h3>
-<p>18,221</p>
-</div>
+            <div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="mini">
+                  <div class="mt">New customers</div>
+                  <div class="mv">862</div>
+                  <div class="small-muted">Last week</div>
+                </div>
+                <div class="mini">
+                  <div class="mt">Total profit</div>
+                  <div class="mv">₹136,755</div>
+                  <div class="small-muted">Weekly profit</div>
+                </div>
+                <div class="mini">
+                  <div class="mt">Premium plan</div>
+                  <div class="mv">₹30 / month</div>
+                  <div class="small-muted">Per user</div>
+                </div>
+                <div class="mini">
+                  <div class="mt">Visits</div>
+                  <div class="mv">102k weekly</div>
+                  <div class="small-muted">Website visits</div>
+                </div>
+              </div>
 
-</div>
+              <div class="profit-row">
+                <div class="profit-box">
+                  <div style="color:var(--muted); font-size:12px">Total Profit</div>
+                  <div style="font-weight:800; color:var(--accent); margin-top:6px">₹136,755.77</div>
+                  <canvas id="lineSmall" height="80" style="margin-top:8px;"></canvas>
+                </div>
 
-<div class="grid">
+                <div style="width:120px;">
+                  <div style="background:linear-gradient(180deg,#071418,#041014); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.02);">
+                    <div style="color:var(--muted); font-size:12px">Number of Sales</div>
+                    <div style="font-weight:800; margin-top:8px">₹71,020</div>
+                  </div>
+                </div>
+              </div>
 
-<div>
+            </div>
+          </div>
 
-<div class="sales">
+          <!-- customer list -->
+          <div class="customers-panel panel fadeUp">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-weight:800">Customer list</div>
+              <div style="color:var(--muted); font-size:13px">Top customers</div>
+            </div>
 
-<h3>Sales Overview</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Name</th><th style="width:80px">Deals</th><th style="width:120px">Total Value</th></tr>
+                </thead>
+                <tbody id="custBody"></tbody>
+              </table>
+            </div>
+          </div>
 
-<canvas id="donutChart"></canvas>
+        </div>
 
-</div>
+        <!-- RIGHT COLUMN -->
+        <aside class="right-col">
 
-<div class="customer">
+          <div class="right-panel panel fadeUp">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-weight:800">Notifications</div>
+              <div style="color:var(--muted); font-size:12px">Today</div>
+            </div>
 
-<h3>Customer list</h3>
+            <div style="margin-top:10px;">
+              <div class="notif-item"><div style="width:10px;height:10px;border-radius:6px;background:var(--accent);margin-top:6px;"></div><div><strong>56 New users registered</strong><div class="small-muted">Just now</div></div></div>
+              <div class="notif-item"><div style="width:10px;height:10px;border-radius:6px;background:#60a5fa;margin-top:6px;"></div><div><strong>132 Orders placed</strong><div class="small-muted">59 minutes ago</div></div></div>
+              <div class="notif-item"><div style="width:10px;height:10px;border-radius:6px;background:#fbbf24;margin-top:6px;"></div><div><strong>Funds withdrawn</strong><div class="small-muted">12 hours ago</div></div></div>
+              <div class="notif-item"><div style="width:10px;height:10px;border-radius:6px;background:#ef4444;margin-top:6px;"></div><div><strong>5 unread messages</strong><div class="small-muted">Today, 1:59 PM</div></div></div>
+            </div>
+          </div>
 
-<table>
+          <div class="right-panel panel fadeUp">
+            <div style="font-weight:800; margin-bottom:8px">Activities</div>
+            <div class="activity-item"><div style="width:10px;height:10px;border-radius:6px;background:#ef4444;margin-top:6px"></div><div><strong>Changed the style</strong><div class="small-muted">Just now</div></div></div>
+            <div class="activity-item"><div style="width:10px;height:10px;border-radius:6px;background:#22c55e;margin-top:6px"></div><div><strong>177 New products added</strong><div class="small-muted">47 minutes ago</div></div></div>
+            <div class="activity-item"><div style="width:10px;height:10px;border-radius:6px;background:#60a5fa;margin-top:6px"></div><div><strong>11 Products archived</strong><div class="small-muted">1 day ago</div></div></div>
+          </div>
 
-<tr>
-<th>Name</th>
-<th>Deals</th>
-<th>Total Value</th>
-</tr>
+          <div class="right-panel panel fadeUp">
+            <div style="font-weight:800">Contacts of your managers</div>
+            <div style="margin-top:8px;">
+              <div class="contact-row"><div class="avatar">DC</div><div>Daniel Craig<div class="small-muted">Head — Sales</div></div></div>
+              <div class="contact-row"><div class="avatar" style="background:linear-gradient(135deg,#fbe7c2,#ffd98a)">KM</div><div>Kate Morrison<div class="small-muted">Ops</div></div></div>
+              <div class="contact-row"><div class="avatar" style="background:linear-gradient(135deg,#dff7d8,#9ef07e)">ND</div><div>Nathaniel Donovan<div class="small-muted">Account Manager</div></div></div>
+              <div class="contact-row"><div class="avatar" style="background:linear-gradient(135deg,#cfe8ff,#9fe0ff)">EW</div><div>Elisabeth Wayne<div class="small-muted">Support</div></div></div>
+            </div>
+          </div>
 
-<tr>
-<td>Danny Liu</td>
-<td>1023</td>
-<td>$37,431</td>
-</tr>
+        </aside>
 
-<tr>
-<td>Bella Devlant</td>
-<td>963</td>
-<td>$30,423</td>
-</tr>
+      </div>
 
-<tr>
-<td>Darrell Steward</td>
-<td>843</td>
-<td>$28,549</td>
-</tr>
+    </section>
 
-<tr>
-<td>Chris Evans</td>
-<td>623</td>
-<td>$21,100</td>
-</tr>
+    <!-- RIGHT narrow column mimic green frame edge -->
+    <aside style="width:200px; display:flex; flex-direction:column; gap:12px;">
+      <div style="background:linear-gradient(180deg,#05221b,#083227); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.02);">
+        <div style="font-weight:700;">Quick Actions</div>
+        <div style="margin-top:10px;"><button style="width:100%; padding:10px; border-radius:8px; border:none; background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#041018; font-weight:800;">Open demo</button></div>
+      </div>
+    </aside>
 
-<tr>
-<td>Julia Carter</td>
-<td>532</td>
-<td>$18,420</td>
-</tr>
+  </div> <!-- /app -->
+</div> <!-- /frame -->
 
-</table>
+<!-- slide-in account panel -->
+<div id="accountPanel" class="account-panel" aria-hidden="true">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <div id="accTitle" style="font-weight:800; font-size:16px">Client Name</div>
+      <div id="accEmail" class="small-muted">client@email.com</div>
+    </div>
+    <div><button onclick="closeAccount()" style="background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:var(--muted)">Close</button></div>
+  </div>
 
-</div>
+  <div style="display:flex; gap:10px; margin-top:12px;">
+    <div style="flex:1;">
+      <div class="small-muted">Outstanding</div>
+      <div id="accOutstanding" style="font-weight:800;color:var(--accent);font-size:18px;margin-top:8px">₹0</div>
+      <div id="accDueNote" class="small-muted" style="margin-top:6px">Due since 0 days</div>
+    </div>
+    <div style="width:140px;">
+      <div class="small-muted">Last Payment</div>
+      <div id="accLastPaid" style="font-weight:800;margin-top:8px">—</div>
+    </div>
+  </div>
 
-</div>
+  <div style="margin-top:12px;">
+    <div class="small-muted">Payment history</div>
+    <div id="accPayments" style="margin-top:8px"></div>
+  </div>
 
-<div class="right">
-
-<div class="panel">
-
-<h3>Notifications</h3>
-
-<div class="activity">54 New users registered</div>
-<div class="activity">132 Orders placed</div>
-<div class="activity">Funds withdrawn</div>
-<div class="activity">5 unread messages</div>
-
-</div>
-
-<div class="panel">
-
-<h3>Activities</h3>
-
-<div class="activity">Changed the style</div>
-<div class="activity">17 new products added</div>
-<div class="activity">11 products archived</div>
-
-</div>
-
-<div class="panel">
-
-<h3>Manager Contacts</h3>
-
-<div class="manager">
-<div class="avatar">DC</div>
-Daniel Craig
-</div>
-
-<div class="manager">
-<div class="avatar">KM</div>
-Kate Morrison
-</div>
-
-<div class="manager">
-<div class="avatar">ND</div>
-Nathaniel Donovan
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+  <div style="margin-top:12px; display:flex; gap:8px;">
+    <button style="flex:1;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;padding:10px;border-radius:8px;font-weight:800;color:#041018" onclick="markPaid()">Mark Paid (demo)</button>
+    <button style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:8px;color:var(--muted)" onclick="sendReminder()">Send Reminder</button>
+  </div>
 </div>
 
 <script>
+/* -------------------------
+  Demo customer data (dense)
+-------------------------- */
+const customers = [
+  {name:"Danny Liu", email:"danny@gmail.com", deals:1023, value:37431, lastCheck:"2026-03-12T10:00:00Z", outstanding:0, lastPaid:"2026-02-01", payments:[{date:"2026-02-01",amount:37431}]},
+  {name:"Bella Deviant", email:"bella@gmail.com", deals:963, value:30423, lastCheck:"2026-03-11T18:00:00Z", outstanding:5000, lastPaid:"2025-12-01", payments:[{date:"2025-12-01",amount:25423}]},
+  {name:"Darrell Steward", email:"darrell@gmail.com", deals:843, value:28549, lastCheck:"2026-03-11T20:00:00Z", outstanding:1200, lastPaid:"2026-01-10", payments:[{date:"2026-01-10",amount:12849}]},
+  {name:"Chris Evans", email:"chris@gmail.com", deals:623, value:21100, lastCheck:"2026-03-10T12:00:00Z", outstanding:0, lastPaid:"2026-02-15", payments:[{date:"2026-02-15",amount:21100}]},
+  {name:"Julia Carter", email:"julia@gmail.com", deals:532, value:18420, lastCheck:"2026-03-09T11:00:00Z", outstanding:0, lastPaid:"2026-01-05", payments:[{date:"2026-01-05",amount:18420}]},
+  {name:"Roy Singh", email:"roy@gmail.com", deals:410, value:16450, lastCheck:"2026-03-11T09:00:00Z", outstanding:1500, lastPaid:"2025-11-01", payments:[{date:"2025-11-01",amount:14950}]},
+  {name:"Asha Patel", email:"asha@gmail.com", deals:388, value:15000, lastCheck:"2026-03-12T08:30:00Z", outstanding:20000, lastPaid:"2025-09-01", payments:[{date:"2025-09-01",amount:15000}]},
+  {name:"Mall of Rajkot", email:"mall@rajkot.com", deals:301, value:30000, lastCheck:"2026-03-12T09:40:00Z", outstanding:30000, lastPaid:"2025-09-01", payments:[{date:"2025-09-01",amount:30000}]}
+];
 
-new Chart(document.getElementById("donutChart"),{
-
-type:"doughnut",
-
-data:{
-labels:["Electronic","Furniture","Clothes","Shoes"],
-datasets:[{
-data:[55640,11420,1840,2120],
-backgroundColor:["#22c55e","#3b82f6","#f59e0b","#ef4444"]
-}]
+/* render customer table */
+function renderCust(){
+  const tbody = document.getElementById('custBody'); tbody.innerHTML='';
+  customers.forEach((c,i)=>{
+    const tr = document.createElement('tr');
+    tr.onclick = ()=> openAccount(i);
+    tr.innerHTML = `<td><div style="display:flex;align-items:center"><div class="avatar">${c.name.split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase()}</div>
+      <div style="margin-left:8px"><div style="font-weight:700">${c.name}</div><div style="color:var(--muted);font-size:12px;margin-top:4px">${c.email}</div></div></div></td>
+      <td>${c.deals.toLocaleString()}</td>
+      <td>₹${c.value.toLocaleString()}</td>`;
+    tbody.appendChild(tr);
+  });
 }
 
-});
+/* charts */
+let donutChart, lineChart;
+function buildCharts(){
+  const donutCtx = document.getElementById('donutChart').getContext('2d');
+  donutChart = new Chart(donutCtx, {
+    type:'doughnut',
+    data:{
+      labels:['Electronic','Furniture','Clothes','Shoes'],
+      datasets:[{ data:[55640,11420,1840,2120], backgroundColor:['#22c55e','#60a5fa','#fbbf24','#ef4444'], hoverOffset:8 }]
+    },
+    options:{ cutout:'70%', plugins:{ legend:{display:false} } }
+  });
+
+  const lineCtx = document.getElementById('lineSmall').getContext('2d');
+  lineChart = new Chart(lineCtx, {
+    type:'line',
+    data:{
+      labels:['Oct','Nov','Dec','Jan','Feb','Mar'],
+      datasets:[{ data:[82000,96000,110000,90000,115000,136000], borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.08)', tension:0.32, pointRadius:3 }]
+    },
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{ ticks:{ color:'#96a8b8' } }, y:{ ticks:{ color:'#96a8b8' } } }, maintainAspectRatio:false }
+  });
+}
+
+/* account panel */
+let activeIndex = null;
+function openAccount(i){
+  activeIndex = i;
+  const c = customers[i];
+  document.getElementById('accTitle').innerText = c.name;
+  document.getElementById('accEmail').innerText = c.email;
+  document.getElementById('accOutstanding').innerText = '₹' + (c.outstanding||0).toLocaleString();
+  document.getElementById('accDueNote').innerText = c.outstanding>0 ? `Due since ${Math.max(1, Math.floor((Date.now() - new Date(c.lastPaid || c.lastCheck))/ (1000*60*60*24)))} days` : 'No dues';
+  document.getElementById('accLastPaid').innerText = c.lastPaid ? (new Date(c.lastPaid)).toLocaleDateString() : '—';
+  const wrap = document.getElementById('accPayments'); wrap.innerHTML='';
+  (c.payments || []).slice().reverse().forEach(p=>{
+    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.padding='8px 0';
+    row.innerHTML = `<div style="font-size:13px">${p.date} — ${p.note||''}</div><div style="font-weight:700;color:var(--accent)">₹${p.amount?.toLocaleString()}</div>`;
+    wrap.appendChild(row);
+  });
+  document.getElementById('accountPanel').classList.add('open');
+  document.getElementById('accountPanel').setAttribute('aria-hidden','false');
+}
+function closeAccount(){ document.getElementById('accountPanel').classList.remove('open'); document.getElementById('accountPanel').setAttribute('aria-hidden','true'); activeIndex=null; }
+
+/* demo actions */
+function markPaid(){
+  if(activeIndex===null) return alert('Open a client first');
+  const c = customers[activeIndex]; if(!c.outstanding || c.outstanding<=0) return alert('No outstanding');
+  const amt = c.outstanding; const date = new Date().toISOString().slice(0,10);
+  c.payments.unshift({date, amount:amt}); c.lastPaid=date; c.outstanding=0;
+  renderCust(); openAccount(activeIndex); alert('Marked paid (demo) — UI updated only');
+}
+function sendReminder(){ if(activeIndex===null) return alert('Open a client first'); alert('Reminder sent (simulated)'); }
+
+/* init */
+renderCust(); buildCharts();
 
 </script>
-
 </body>
 </html>
