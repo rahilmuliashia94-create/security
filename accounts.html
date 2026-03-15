@@ -7,23 +7,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#071017;
-  --panel:#0b171b;
-  --muted:#98aeb5;
-  --accent:#16c76b;
-  --accent-2:#0fa85a;
-  --card:#0e1c20;
+  /* updated color scheme: dark / light-black panels / white text / green accents */
+  --bg:#020b0b;           /* very dark background */
+  --panel:#071217;        /* slightly lighter panel */
+  --muted:#95a9b8;        /* muted text */
+  --accent:#22c55e;       /* green accent */
+  --accent-2:#16c76b;     /* second green */
+  --card:#0b1416;         /* card background */
   --glass: rgba(255,255,255,0.02);
   --radius:12px;
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --form-bg: #ffffff;
-  --primary-cta: #d49b00; /* gold/yellow submit like second photo */
+  --form-bg: #0b1416;     /* modal background changed to dark */
+  --primary-cta: linear-gradient(90deg,var(--accent),var(--accent-2)); /* green submit */
 }
 
 /* base */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017);font-family:var(--font);-webkit-font-smoothing:antialiased;color:#dff6ee}
-.container{max-width:1280px;margin:18px auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.2));border:1px solid rgba(255,255,255,0.02)}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#031018);font-family:var(--font);-webkit-font-smoothing:antialiased;color:#e7f3f7}
+.container{max-width:1280px;margin:18px auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.18));border:1px solid rgba(255,255,255,0.02)}
 
 /* layout */
 .app{display:flex;gap:12px}
@@ -42,7 +43,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017
   border-right:1px solid rgba(255,255,255,0.02);
 }
 .brand{ color:var(--accent); font-weight:800; font-size:16px; display:flex; gap:8px; align-items:center;}
-.brand .logo-dot{ width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#21c55e,#7ef09c); display:inline-flex; align-items:center; justify-content:center; color:#042017; font-weight:800; font-size:13px; }
+.brand .logo-dot{ width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:inline-flex; align-items:center; justify-content:center; color:#042114; font-weight:800; font-size:13px; }
 
 .searchbox{ background:var(--glass); border-radius:8px; padding:8px 10px; color:var(--muted); font-size:13px; }
 
@@ -55,7 +56,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017
 /* main area */
 .main{flex:1;display:flex;flex-direction:column;gap:12px;padding:6px;width:100%}
 .header{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.header h1{margin:0;font-size:18px;color:#e6fff3}
+.header h1{margin:0;font-size:18px;color:#ffffff}
 .controls{display:flex;gap:8px;align-items:center}
 
 /* controls */
@@ -68,16 +69,16 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .search{background:var(--glass);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);width:320px;color:var(--muted)}
 .table-wrap{overflow:auto;max-height:560px;border-radius:8px}
-.table{width:100%;border-collapse:collapse;font-size:13px;color:#dff6ee}
+.table{width:100%;border-collapse:collapse;font-size:13px;color:#e7f3f7}
 .table thead th{position:sticky;top:0;background:transparent;padding:12px;text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid rgba(255,255,255,0.03)}
 .table tbody td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.03)}
 .row-actions{display:flex;gap:8px;align-items:center}
 
 /* logo thumbnail */
-.logo-thumb{width:46px;height:46;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2a21,#08221d);border:1px solid rgba(255,255,255,0.02);font-weight:800;color:#92f3b4}
+.logo-thumb{width:46px;height:46;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#072a20,#08221d);border:1px solid rgba(255,255,255,0.02);font-weight:800;color:#bff6d4}
 .pill{padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
-.pill-active{background:linear-gradient(90deg,#064e31,#16c76b);color:#eaffef}
-.pill-suspended{background:linear-gradient(90deg,#4a4b4a,#2b2b2b);color:#f3e6e6}
+.pill-active{background:linear-gradient(90deg,#064e31,var(--accent));color:#eaffef}
+.pill-suspended{background:linear-gradient(90deg,#2f2f2f,#1f1f1f);color:#f3e6e6}
 
 /* 3-dot dropdown */
 .dd{position:relative}
@@ -89,17 +90,17 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017
 /* modal */
 .modal-backdrop{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(2,6,5,0.7);display:none;align-items:center;justify-content:center;z-index:200}
 .modal-backdrop.open{display:flex}
-.modal-card{width:94%;max-width:760px;background:var(--form-bg);border-radius:14px;padding:22px;box-shadow:0 40px 100px rgba(0,0,0,0.6);color:#123;overflow:auto}
-.modal-card h2{margin:0;color:#123;font-weight:700}
+.modal-card{width:94%;max-width:760px;background:var(--form-bg);border-radius:14px;padding:22px;box-shadow:0 40px 100px rgba(0,0,0,0.6);color:#e7f3f7;overflow:auto}
+.modal-card h2{margin:0;color:var(--accent);font-weight:700}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .form-row{display:flex;flex-direction:column;gap:6px}
-.input{padding:12px;border-radius:10px;border:1px solid #e6e6e6;background:#fff;color:#123;font-size:14px}
-.input::placeholder{color:#9aa6b0}
-.select{padding:12px;border-radius:10px;border:1px solid #e6e6e6;background:#fff;color:#123}
+.input{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#fff;font-size:14px}
+.input::placeholder{color:#94a8ac}
+.select{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#fff}
 .modal-actions{display:flex;gap:12px;justify-content:center;margin-top:18px}
-.btn-submit{background:linear-gradient(90deg,var(--primary-cta),#c18400);color:#fff;border-radius:10px;padding:14px 18px;font-weight:800;border:none;font-size:15px;cursor:pointer}
-.btn-cancel{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:12px;border-radius:10px;cursor:pointer}
-.read-row{padding:10px;border-radius:8px;background:#f7f7f7;margin-top:8px}
+.btn-submit{background:var(--primary-cta);color:#042114;border-radius:10px;padding:14px 18px;font-weight:800;border:none;font-size:15px;cursor:pointer}
+.btn-cancel{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:12px;border-radius:10px;cursor:pointer;color:#e7f3f7}
+.read-row{padding:10px;border-radius:8px;background:rgba(255,255,255,0.02);margin-top:8px;color:#e7f3f7}
 
 /* small muted style */
 .small-muted{ color:var(--muted); font-size:12px; }
@@ -121,8 +122,8 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#061012,#071017
 
         <nav class="menu">
           <div class="section">DASHBOARDS</div>
-          <a class="active" href="#">Overview</a>
-          <a href="#">Account</a>
+          <a class="active" href="admin.html">Overview</a>
+          <a href="accounts.html">Accounts</a>
           <a href="#">Analytics</a>
           <a href="#">Customers</a>
           <div class="section">SETTINGS</div>
