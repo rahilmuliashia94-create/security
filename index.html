@@ -1,987 +1,1867 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iStratech — Solutions & Products</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --brand:#0b4da2; /* primary */
-      --accent:#00a6ff; /* highlight */
-      --muted:#6b7280;
-      --bg:#f7f9fb;
-      --card:#ffffff;
-      --radius:12px;
-      --max-width:1200px;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);color:#0b1220}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everest Security Pvt. Ltd. | Israeli Hi-Tech Security Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #004d99;
+            --secondary: #00d4ff;
+            --accent: #ff6b35;
+            --dark: #0a0e27;
+            --darker: #050817;
+            --light: #ffffff;
+            --gray: #8b92a8;
+            --gradient: linear-gradient(135deg, #0066cc 0%, #00d4ff 100%);
+            --gradient-dark: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
 
-    /* Header */
-    header{background:white;position:sticky;top:0;z-index:60;box-shadow:0 6px 18px rgba(12,20,40,0.06)}
-    .topbar{display:flex;align-items:center;justify-content:space-between;height:72px}
-    .logo{display:flex;align-items:center;gap:12px}
-    .logo .mark{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
-    nav{display:flex;gap:18px;align-items:center}
-    nav a{padding:8px 10px;border-radius:8px;font-weight:600;color:#0b1220}
-    .cta{background:var(--brand);color:white;padding:10px 14px;border-radius:10px;font-weight:700}
-    .menu-toggle{display:none}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Dropdown navigation */
-    .nav{display:flex;gap:18px;align-items:center}
-    .dropdown{position:relative}
-    .dropdown-menu{
-      position:absolute;
-      top:36px;
-      left:0;
-      background:white;
-      border-radius:10px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.08);
-      display:none;
-      flex-direction:column;
-      min-width:200px;
-      padding:10px 0;
-      z-index:50;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .dropdown-menu a{
-      padding:10px 16px;
-      font-weight:500;
-      white-space:nowrap;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    .dropdown-menu a:hover{
-      background:#f2f6ff;
-      color:#0b4da2;
-    }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
 
-    .dropdown:hover .dropdown-menu{
-      display:flex;
-    }
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
 
-    /* Hero */
-    .hero{display:flex;align-items:center;padding:56px 0}
-    .hero-left{flex:1;padding-right:30px}
-    .kicker{display:inline-block;background:#eef6ff;color:var(--brand);padding:8px 12px;border-radius:999px;font-weight:700;margin-bottom:18px}
-    h1{font-size:40px;margin:0 0 12px;line-height:1.05}
-    p.lead{color:var(--muted);font-size:18px;margin:0 0 22px}
-    .hero-actions{display:flex;gap:12px;margin-top:18px}
-    .btn-outline{border:2px solid #e6eefb;padding:10px 14px;border-radius:10px}
-    .hero-right{flex:1}
-    .hero-illustration{background:linear-gradient(180deg, rgba(11,77,162,0.06), rgba(0,166,255,0.02));border-radius:18px;padding:18px}
-    .device-mock{width:100%;height:320px;background-image:url('https://images.unsplash.com/photo-1561414927-6f129f67a9f8?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=aa5c0b1e6d4c3b5f3a1b2f0b9e0b497a');background-size:cover;background-position:center;border-radius:12px;box-shadow:0 10px 30px rgba(12,20,40,0.08)}
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
 
-    /* Grids */
-    .grid{display:grid;gap:20px}
-    .solutions{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(12,20,40,0.04);}
-    .card h3{margin:10px 0 6px;font-size:18px}
-    .card p{margin:0;color:var(--muted);font-size:14px}
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 5%;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
 
-    /* Products */
-    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
-    .product{background:white;padding:14px;border-radius:12px;text-align:center}
-    .product img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-    .product h4{margin:10px 0 4px}
-    .product p{margin:0;color:var(--muted);font-size:13px}
+        .navbar.scrolled {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 102, 204, 0.2);
+            padding: 0.8rem 5%;
+        }
 
-    /* Resources */
-    .resources{display:flex;flex-wrap:wrap;gap:18px}
-    .resource{flex:1 1 280px;padding:14px;background:linear-gradient(90deg,#fff,#f8fbff);border-radius:12px}
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    footer{padding:36px 0 80px;background:white;margin-top:40px}
-    .footer-grid{display:flex;gap:24px;flex-wrap:wrap}
-    .small{font-size:13px;color:var(--muted)}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
 
-    /* Responsive */
-    @media (max-width:900px){
-      .hero{flex-direction:column}
-      nav{display:none}
-      .menu-toggle{display:block}
-      .hero-illustration{width:100%}
-      .topbar{height:64px}
-    }
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
 
-  </style>
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .logo-text {
+            color: var(--light);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+
+        .logo-text span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s;
+            opacity: 0.9;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+            opacity: 1;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--gradient);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+            border-color: var(--secondary);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 120px 5% 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-dark);
+            z-index: -2;
+        }
+
+        .hero-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .hero-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text h1 span {
+            display: block;
+            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            color: var(--secondary);
+            margin-top: 0.5rem;
+            -webkit-text-fill-color: var(--secondary);
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--light);
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: floatImage 6s ease-in-out infinite;
+        }
+
+        @keyframes floatImage {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 50px 100px rgba(0, 102, 204, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--secondary);
+            border-radius: 20px;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .floating-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        .floating-card.card-1 {
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .floating-card.card-2 {
+            bottom: 20%;
+            right: -10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-card i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .floating-card span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 5%;
+            background: var(--dark);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 102, 204, 0.2);
+            color: var(--secondary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .services-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 0;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            box-shadow: 0 30px 60px rgba(0, 102, 204, 0.3);
+        }
+
+        .service-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .service-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .service-card p {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-link {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s;
+        }
+
+        .service-card:hover .service-link {
+            gap: 1rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 5%;
+            background: var(--darker);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .experience-badge {
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            background: var(--gradient);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .experience-badge .years {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .experience-badge .text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .about-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .about-content h2 span {
+            color: var(--secondary);
+        }
+
+        .about-content > p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .feature-list i {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .client-type {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .client-type i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .client-type span {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Products Section */
+        .products {
+            padding: 100px 5%;
+            background: var(--dark);
+        }
+
+        .products-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            border-color: var(--secondary);
+        }
+
+        .product-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(10, 14, 39, 0.9) 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover .product-overlay {
+            opacity: 1;
+        }
+
+        .product-content {
+            padding: 1.5rem;
+        }
+
+        .product-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-content p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* Monitoring Section */
+        .monitoring {
+            padding: 100px 5%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .monitoring::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .monitoring-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .monitoring-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .monitoring-content > p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .monitoring-features {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .monitor-feature {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .monitor-feature i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-top: 0.2rem;
+        }
+
+        .monitor-feature h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .monitor-feature p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+
+        .monitoring-image {
+            position: relative;
+        }
+
+        .monitoring-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 5%;
+            background: var(--darker);
+        }
+
+        .contact-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info > p {
+            color: var(--gray);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-cards {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateX(10px);
+            border-color: var(--secondary);
+            background: linear-gradient(145deg, rgba(0, 102, 204, 0.1) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+
+        .contact-details p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .contact-form {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            padding: 60px 5% 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
+            border-color: var(--secondary);
+        }
+
+        .footer-column h4 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-column a:hover {
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-bottom-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content,
+            .about-container,
+            .monitoring-container,
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.8rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-badge {
+                right: 0;
+                bottom: -20px;
+                padding: 1rem;
+            }
+
+            .experience-badge .years {
+                font-size: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .floating-card {
+                display: none;
+            }
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 39, 0.98);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-overlay a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            transition: color 0.3s;
+        }
+
+        .mobile-overlay a:hover {
+            color: var(--secondary);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--light);
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="container topbar">
-      <div class="logo">
-        <div class="mark">ES</div>
-        <div>
-          <div style="font-weight:800">iStratech</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Solutions • Products • Support</div>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <div class="dropdown">
-          <a href="index.html">Home</a>
-        </div>
-
-        <div class="dropdown">
-          <a href="solutions.html">Solutions ▾</a>
-          <div class="dropdown-menu">
-            <a href="solutions.html#video">Video Surveillance</a>
-            <a href="solutions.html#access">Access Control</a>
-            <a href="solutions.html#parking">Smart Parking</a>
-            <a href="solutions.html#iot">IoT Sensors</a>
-          </div>
-        </div>
-
-        <div class="dropdown">
-          <a href="products.html">Products ▾</a>
-          <div class="dropdown-menu">
-            <a href="products.html#cameras">Cameras</a>
-            <a href="products.html#recorders">Recorders</a>
-            <a href="products.html#sensors">Sensors</a>
-          </div>
-        </div>
-
-        <div class="dropdown">
-          <a href="support.html">Support ▾</a>
-          <div class="dropdown-menu">
-            <a href="support.html#docs">Documentation</a>
-            <a href="support.html#firmware">Firmware</a>
-            <a href="support.html#contact">Technical Support</a>
-          </div>
-        </div>
-
-        <a href="#contact">Contact</a>
-        <a class="cta" href="#contact">Get Quote</a>
-      </nav>
-      <button class="menu-toggle" aria-label="Open menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- HERO -->
-    <section id="home" class="hero">
-      <div class="hero-left">
-        <div class="kicker">Complete Surveillance & IoT</div>
-        <h1>Smart security. Simple integration. Enterprise-grade reliability.</h1>
-        <p class="lead">Design, install and manage intelligent presence and sensor systems, access control, and video surveillance — for offices, factories and public spaces. Fast deployment, modular hardware, clear pricing.</p>
-        <div class="hero-actions">
-          <a class="cta" href="#contact">Contact Sales</a>
-          <a class="btn-outline" href="#solutions">Explore Solutions</a>
-        </div>
-
-        <div style="margin-top:28px;display:flex;gap:12px;align-items:center">
-          <div style="display:flex;gap:10px;align-items:center">
-            <img src="https://images.unsplash.com/photo-1531497865141-12a1e1fbe9c1?q=80&w=200&auto=format&fit=crop&ixlib=rb-4.0.3&s=14d8b4bf0c4f6c7e1e8d6c0c5a7b6d94" width="48" height="48" style="border-radius:8px;object-fit:cover" alt="partner">
-            <div>
-              <div style="font-weight:700">Trusted by enterprises</div>
-              <div class="small">Manufacturing • Logistics • Retail • Education</div>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">EVEREST<span>SECURITY</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="nav-cta">Get Quote</a>
+            <div class="mobile-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="hero-right">
-        <div class="hero-illustration">
-          <div class="device-mock" role="img" aria-label="product mock"></div>
-        </div>
-      </div>
-    </section>
+    </nav>
 
-    <!-- SOLUTIONS -->
-    <section id="solutions" style="margin-top:44px">
-      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
-        <div>
-          <h2 style="margin:0">Solutions</h2>
-          <div class="small">End-to-end systems tailored to your environment</div>
-        </div>
-        <div class="small">See all solutions →</div>
-      </div>
-
-      <div class="grid solutions">
-        <div class="card">
-          <div style="font-weight:800">Video Surveillance</div>
-          <h3>Enterprise NVR & Analytics</h3>
-          <p>High-resolution IP cameras, recording servers, and AI analytics for people counting, perimeter detection and license plate recognition.</p>
-        </div>
-        <div class="card">
-          <div style="font-weight:800">Access Control</div>
-          <h3>Secure doors & identity</h3>
-          <p>Card readers, biometric authentication, and cloud management for single or multi-site deployments.</p>
-        </div>
-        <div class="card">
-          <div style="font-weight:800">Parking & Traffic</div>
-          <h3>Smart parking systems</h3>
-          <p>Guidance, occupancy sensors, ANPR and integrations with payment & barrier systems.</p>
-        </div>
-        <div class="card">
-          <div style="font-weight:800">IoT Sensors</div>
-          <h3>Presence, environment & alerts</h3>
-          <p>Wireless presence detection, environmental sensors and dashboard alerts for operational safety and energy savings.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRODUCTS -->
-    <section id="products" style="margin-top:44px">
-      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
-        <div>
-          <h2 style="margin:0">Products</h2>
-          <div class="small">Cameras, recorders, and sensors</div>
-        </div>
-        <div class="small">View catalogue →</div>
-      </div>
-
-      <div class="products">
-        <div class="product">
-          <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6dd1b4e6b2b8b7e2c3f6a9a4d9b7d1a0" alt="bullet camera">
-          <h4>Ultra HD Bullet Camera</h4>
-          <p class="small">4K, low-light, weatherproof</p>
-        </div>
-        <div class="product">
-          <img src="https://images.unsplash.com/photo-1485217988980-11786ced9454?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9f4a3a1b667f1c2d3b4e5f6a7b8c9d0e" alt="dome camera">
-          <h4>Compact Dome Camera</h4>
-          <p class="small">Vandal-resistant, 2MP/8MP options</p>
-        </div>
-        <div class="product">
-          <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b4f8b1c2e3d4f5a6b7c8d9e0f1a2345" alt="nvr">
-          <h4>Network Video Recorder</h4>
-          <p class="small">Scalable storage & health monitoring</p>
-        </div>
-        <div class="product">
-          <img src="https://images.unsplash.com/photo-1600267168136-2f9a0c8b7f3b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6" alt="sensor">
-          <h4>Presence Sensor</h4>
-          <p class="small">Battery-friendly, quick install</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- RESOURCES -->
-    <section id="resources" style="margin-top:44px">
-      <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px">
-        <div>
-          <h2 style="margin:0">Resources & Support</h2>
-          <div class="small">Manuals, downloads, integrations</div>
-        </div>
-        <div class="small">Support center →</div>
-      </div>
-
-      <div class="resources">
-        <div class="resource">
-          <div style="font-weight:700">Documentation</div>
-          <p class="small">Install guides, datasheets, API references and integration notes for developers and system integrators.</p>
-        </div>
-        <div class="resource">
-          <div style="font-weight:700">Case Studies</div>
-          <p class="small">Real deployments in retail, logistics, and manufacturing — outcomes and ROI.</p>
-        </div>
-        <div class="resource">
-          <div style="font-weight:700">Software & Firmware</div>
-          <p class="small">Latest firmware downloads and release notes to keep systems secure and performant.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" style="margin-top:44px;margin-bottom:30px">
-      <div style="display:flex;gap:20px;flex-wrap:wrap">
-        <div style="flex:1;min-width:320px" class="card">
-          <h3>Contact Sales</h3>
-          <p class="small">Tell us about your site and we'll propose an architecture, equipment list and quote.</p>
-          <form onsubmit="event.preventDefault();alert('Send form data to your CRM or e-mail address.');">
-            <div style="margin-top:12px"><label class="small">Company</label><input required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
-            <div style="margin-top:12px"><label class="small">Name</label><input required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
-            <div style="margin-top:12px"><label class="small">Email</label><input type="email" required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb"></div>
-            <div style="margin-top:12px"><label class="small">Message</label><textarea required style="width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eefb;min-height:100px"></textarea></div>
-            <div style="margin-top:12px;display:flex;gap:8px"><button class="cta" type="submit">Request Quote</button><button class="btn-outline" type="reset">Reset</button></div>
-          </form>
-        </div>
-
-        <div style="flex:1;min-width:300px" class="card">
-          <h3>Office & Support</h3>
-          <p class="small">Sales: +91 22 1234 5678<br>Support: support@istratech.example.com</p>
-          <div style="margin-top:8px" class="small">Address: 101 Industry Park, Rajkot, India</div>
-          <div style="height:180px;margin-top:14px;background:#eef6ff;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--brand);font-weight:700">Map placeholder</div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    <div class="container">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap">
-        <div style="max-width:340px">
-          <div style="font-weight:800">iStratech</div>
-          <div class="small" style="margin-top:8px">Solutions and services for commercial video surveillance, access control and IoT sensors.</div>
-        </div>
-        <div style="display:flex;gap:24px;flex-wrap:wrap">
-          <div>
-            <div style="font-weight:700">Products</div>
-            <div class="small" style="margin-top:8px">Cameras<br>NVRs<br>Sensors</div>
-          </div>
-          <div>
-            <div style="font-weight:700">Company</div>
-            <div class="small" style="margin-top:8px">About<br>Careers<br>Contact</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="border-top:1px solid #eef3fb;margin-top:18px;padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
-        <div class="small">© "iStratech" — All rights reserved</div>
-        <div class="small">Privacy & terms</div>
-      </div>
+    <!-- Mobile Menu -->
+    <div class="mobile-overlay" id="mobileMenu">
+        <i class="fas fa-times close-menu" onclick="toggleMenu()"></i>
+        <a href="#home" onclick="toggleMenu()">Home</a>
+        <a href="#services" onclick="toggleMenu()">Services</a>
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#products" onclick="toggleMenu()">Products</a>
+        <a href="#contact" onclick="toggleMenu()">Contact</a>
     </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-particles" id="particles"></div>
+        
+        <div class="hero-content">
+            <div class="hero-text fade-in">
+                <h1>
+                    Israeli Hi-Tech Security Solutions
+                    <span>Under Israeli Technology & Supervision</span>
+                </h1>
+                <p>Everest Security Pvt. Ltd. provides comprehensive "Turn Key" security solutions with 24/7 online alarm monitoring services using the most advanced Israeli smart technologies.</p>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">Clients Protected</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Monitoring</span>
+                    </div>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#services" class="btn-primary">
+                        Explore Solutions <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#contact" class="btn-secondary">
+                        Contact Us <i class="fas fa-phone"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-image fade-in">
+                <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/everest-house-building.jpg" alt="Everest Security Building">
+                <div class="floating-card card-1">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Israeli Technology</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-headset"></i>
+                    <span>24/7 Support</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="section-header fade-in">
+            <span class="section-tag">Our Solutions</span>
+            <h2 class="section-title">Comprehensive Security Services</h2>
+            <p class="section-subtitle">We provide full-range monitoring products and turn-key security solutions for all sectors</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3>Bank Security Solutions</h3>
+                <p>No.1 Online Security Service for Banks, Finance Offices, and Financial Institutions. Complete protection with real-time monitoring and instant alert systems.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-money-check-alt"></i>
+                </div>
+                <h3>ATM Protection</h3>
+                <p>Advanced security systems for ATM networks. Protect against skimming, theft, and unauthorized access with our cutting-edge surveillance technology.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-truck-moving"></i>
+                </div>
+                <h3>GPRS for Logistics</h3>
+                <p>Complete fleet management and fuel consumption monitoring solutions. Track your vehicles in real-time with our advanced GPS and GPRS systems.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Employee Tracking</h3>
+                <p>Smart workforce management solutions with interactive capabilities. Monitor field staff, ensure safety, and optimize operations with minimized devices.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <h3>Warehouse Security</h3>
+                <p>Complete perimeter security with behavior detection and Everest Vision technology. Solution architecture designed for large-scale industrial protection.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Residential Security</h3>
+                <p>Protect your home with our smart security systems. From apartments to villas, we provide tailored solutions for complete peace of mind.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-container">
+            <div class="about-image fade-in">
+                <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/everest-security-products.jpg" alt="Everest Security Products">
+                <div class="experience-badge">
+                    <span class="years">20+</span>
+                    <span class="text">Years of<br>Excellence</span>
+                </div>
+            </div>
+            
+            <div class="about-content fade-in">
+                <span class="section-tag">About Us</span>
+                <h2>Welcome to <span>Everest Security</span> Pvt. Ltd.</h2>
+                <p>Everest Security Pvt. Ltd. is an integration company providing "Turn Key" security solutions in all aspects. Under our umbrella, you can find a full range of monitoring products using Israeli Hi-tech Online Monitoring Protection and Monitoring Solutions Equipment.</p>
+                
+                <p>Since 2003, we have successfully served thousands of satisfied customers including Financial Organizations, Banks, Educational Institutions, Government and Semi-Government Organizations, Religious Organizations, Public and Private Sectors, Factories, Showrooms, Shops, Offices, Private Homes, and Temples.</p>
+
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Israeli Technology & Supervision</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7/365 Online Alarm Monitoring</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced Smart Solutions</li>
+                    <li><i class="fas fa-check-circle"></i> Thousands of Satisfied Customers</li>
+                </ul>
+
+                <div class="clients-grid">
+                    <div class="client-type">
+                        <i class="fas fa-university"></i>
+                        <span>Banks</span>
+                    </div>
+                    <div class="client-type">
+                        <i class="fas fa-building"></i>
+                        <span>Offices</span>
+                    </div>
+                    <div class="client-type">
+                        <i class="fas fa-store"></i>
+                        <span>Showrooms</span>
+                    </div>
+                    <div class="client-type">
+                        <i class="fas fa-industry"></i>
+                        <span>Factories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="section-header fade-in">
+            <span class="section-tag">Our Products</span>
+            <h2 class="section-title">ES Online Security Products</h2>
+            <p class="section-subtitle">State-of-the-art security equipment for comprehensive protection</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card fade-in">
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/bank-security-systems.jpg" alt="Bank Security Systems">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>Bank Security Systems</h3>
+                    <p>Complete security solutions for banking institutions including alarm systems, surveillance, and access control.</p>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <span class="product-badge">Popular</span>
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/atm-security.jpg" alt="ATM Security">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>ATM Protection Systems</h3>
+                    <p>Advanced anti-skimming and surveillance technology to protect ATM networks and users.</p>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/gprs-tracking.jpg" alt="GPRS Tracking">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>GPRS Vehicle Tracking</h3>
+                    <p>Real-time fleet management and fuel monitoring solutions for transport and logistics companies.</p>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/employee-tracking.jpg" alt="Employee Tracking">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>Employee Tracking Systems</h3>
+                    <p>Smart workforce management with GPS tracking and communication capabilities.</p>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/warehouse-security.jpg" alt="Warehouse Security">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>Warehouse Security Solutions</h3>
+                    <p>Perimeter security with behavior detection and advanced vision technology.</p>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <span class="product-badge">New</span>
+                <div class="product-image">
+                    <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/security-fencing.jpg" alt="Security Fencing">
+                    <div class="product-overlay">
+                        <span class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View Details</span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <h3>ES Decorative Security Fencing</h3>
+                    <p>Smart fencing solutions with intrusion detection and aesthetic design options.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monitoring Section -->
+    <section class="monitoring">
+        <div class="monitoring-container">
+            <div class="monitoring-content fade-in">
+                <span class="section-tag" style="background: rgba(255,255,255,0.2); color: white;">24/7 Services</span>
+                <h2>Online Alarm Monitoring Center</h2>
+                <p>Everest Security provides 24 Hours 7 Days 365 Days Online Alarm Monitoring Services using the most advanced technologies combined with Israeli smart solutions.</p>
+                
+                <div class="monitoring-features">
+                    <div class="monitor-feature">
+                        <i class="fas fa-satellite-dish"></i>
+                        <div>
+                            <h4>Real-time Monitoring</h4>
+                            <p>Continuous surveillance with instant alert notifications</p>
+                        </div>
+                    </div>
+                    <div class="monitor-feature">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                            <h4>Mobile Integration</h4>
+                            <p>Access your security systems from anywhere via mobile apps</p>
+                        </div>
+                    </div>
+                    <div class="monitor-feature">
+                        <i class="fas fa-bell"></i>
+                        <div>
+                            <h4>Instant Alerts</h4>
+                            <p>Immediate notifications for any security breaches or events</p>
+                        </div>
+                    </div>
+                    <div class="monitor-feature">
+                        <i class="fas fa-headset"></i>
+                        <div>
+                            <h4>Professional Support</h4>
+                            <p>Expert team ready to respond to any security situation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="monitoring-image fade-in">
+                <img src="https://www.everestsecurityonline.com/wp-content/uploads/2023/05/24-7-monitoring.jpg" alt="24/7 Monitoring Center">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">System Online</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="contact-container">
+            <div class="contact-info fade-in">
+                <span class="section-tag">Get In Touch</span>
+                <h2>Contact Us</h2>
+                <p>We're glad to discuss your organisation's security needs. Reach out to us for a consultation.</p>
+                
+                <div class="contact-cards">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Head Office</h4>
+                            <p>Everest House, R.K. Park, Between Mavdi Circle & Gondal Circle, 150 Feet Ring Road, Rajkot - 360004, Gujarat, India</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Branch Office</h4>
+                            <p>104 - Akik Tower, Opp. Rajpath Club, S.G.Road, Bodakdev, Ahmedabad - 380054, Gujarat, India</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Customer Care</h4>
+                            <p>+91 96246 96247<br>+91 96247 96248</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email Us</h4>
+                            <p>info@everestsecurityonline.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form fade-in">
+                <form onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Interested In</label>
+                        <input type="text" id="service" placeholder="e.g., Bank Security, CCTV, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" placeholder="Tell us about your security requirements..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        Send Message <i class="fas fa-paper-plane" style="margin-left: 0.5rem;"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="logo-text">EVEREST<span>SECURITY</span></div>
+                    </a>
+                    <p>Everest Security Pvt. Ltd. provides Israeli Hi-Tech Online Monitoring Protection and Monitoring Solutions since 2003. Your security is our priority.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Bank Security</a></li>
+                        <li><a href="#">ATM Protection</a></li>
+                        <li><a href="#">GPRS Tracking</a></li>
+                        <li><a href="#">CCTV Systems</a></li>
+                        <li><a href="#">Access Control</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">24/7 Monitoring</a></li>
+                        <li><a href="#">Technical Support</a></li>
+                        <li><a href="#">Maintenance</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Everest Security Pvt. Ltd. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
-<!-- ================= PRODUCT CAROUSEL ================= -->
-<section style="background:#f2f6ff;padding:60px 0">
-  <div class="container">
-    <h2 style="margin-bottom:20px">Featured Products</h2>
-
-    <div class="carousel">
-      <div class="carousel-track">
-        <div class="carousel-item">
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" />
-          <h4>AI Security Camera</h4>
-        </div>
-
-        <div class="carousel-item">
-          <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0" />
-          <h4>Smart Access Reader</h4>
-        </div>
-
-        <div class="carousel-item">
-          <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd" />
-          <h4>Enterprise NVR</h4>
-        </div>
-
-        <div class="carousel-item">
-          <img src="https://images.unsplash.com/photo-1581091215367-59ab6b0d0c82" />
-          <h4>Presence Sensor</h4>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= INDUSTRIES ================= -->
-<section style="padding:60px 0">
-  <div class="container">
-    <h2>Industries We Protect</h2>
-
-    <div class="industries-grid">
-      <div class="industry">
-        <h4>Factories</h4>
-        <p>Industrial monitoring, worker safety and production surveillance.</p>
-      </div>
-
-      <div class="industry">
-        <h4>Warehouses</h4>
-        <p>Inventory protection, loading dock monitoring and smart logistics.</p>
-      </div>
-
-      <div class="industry">
-        <h4>Banks</h4>
-        <p>High security camera systems and access control for financial institutions.</p>
-      </div>
-
-      <div class="industry">
-        <h4>Retail Stores</h4>
-        <p>Loss prevention, analytics and customer flow monitoring.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= PRODUCT CATALOG ================= -->
-<section style="background:#f7f9fb;padding:60px 0">
-  <div class="container">
-
-    <h2>Product Catalog</h2>
-
-    <div class="catalog-grid">
-
-      <div class="catalog-card">
-        <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f" />
-        <h4>4K Bullet Camera</h4>
-        <p>Outdoor IP surveillance camera with night vision.</p>
-      </div>
-
-      <div class="catalog-card">
-        <img src="https://images.unsplash.com/photo-1555617117-08fda6edc6d0" />
-        <h4>Dome Security Camera</h4>
-        <p>Compact indoor camera with vandal resistant housing.</p>
-      </div>
-
-      <div class="catalog-card">
-        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" />
-        <h4>Network Video Recorder</h4>
-        <p>Central recording system supporting dozens of cameras.</p>
-      </div>
-
-      <div class="catalog-card">
-        <img src="https://images.unsplash.com/photo-1581091215367-59ab6b0d0c82" />
-        <h4>Smart Motion Sensor</h4>
-        <p>Wireless presence detection for automation and alerts.</p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
-<style>
-
-.carousel{
-  overflow:hidden;
-}
-
-.carousel-track{
-  display:flex;
-  gap:20px;
-  animation:scroll 20s linear infinite;
-}
-
-.carousel-item{
-  min-width:250px;
-  background:white;
-  border-radius:12px;
-  padding:16px;
-  text-align:center;
-  box-shadow:0 6px 20px rgba(0,0,0,0.08);
-}
-
-.carousel-item img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-  border-radius:8px;
-}
-
-@keyframes scroll{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
-
-.industries-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px;
-  margin-top:20px;
-}
-
-.industry{
-  background:white;
-  padding:24px;
-  border-radius:12px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.06);
-}
-
-.catalog-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px;
-  margin-top:20px;
-}
-
-.catalog-card{
-  background:white;
-  padding:18px;
-  border-radius:12px;
-  text-align:center;
-  box-shadow:0 6px 20px rgba(0,0,0,0.06);
-}
-
-.catalog-card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-  border-radius:8px;
-}
-
-</style>
-
-
-  <script>
-    // Small script: mobile nav toggle
-    document.querySelector('.menu-toggle')?.addEventListener('click', function(){
-      const nav = document.querySelector('nav');
-      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-      nav.style.flexDirection = 'column';
-      nav.style.position = 'absolute';
-      nav.style.right = '20px';
-      nav.style.top = '72px';
-      nav.style.background = 'white';
-      nav.style.padding = '12px';
-      nav.style.borderRadius = '12px';
-      nav.style.boxShadow = '0 10px 30px rgba(12,20,40,0.08)';
-    });
-  </script>
-
-
-<!-- ================= MEGA MENU STYLES ================= -->
-<style>
-/* Large Hikvision‑style mega menu */
-.dropdown{position:relative}
-.mega-menu{
-  position:absolute;
-  left:0;
-  top:42px;
-  width:720px;
-  background:white;
-  border-radius:12px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.12);
-  display:none;
-  padding:24px;
-}
-
-.dropdown:hover .mega-menu{display:grid}
-
-.mega-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
-}
-
-.mega-col h4{
-  margin:0 0 8px;
-  font-size:15px;
-}
-
-.mega-col a{
-  display:block;
-  padding:6px 0;
-  font-size:14px;
-  color:#444;
-}
-
-.mega-col a:hover{color:#0b4da2}
-</style>
-
-
-<!-- ================= STATS COUNTERS ================= -->
-<section style="padding:70px 0;background:#0b4da2;color:white">
-  <div class="container">
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;text-align:center">
-
-      <div>
-        <h2 class="counter" data-target="5000">0</h2>
-        <p>Installed Cameras</p>
-      </div>
-
-      <div>
-        <h2 class="counter" data-target="350">0</h2>
-        <p>Enterprise Clients</p>
-      </div>
-
-      <div>
-        <h2 class="counter" data-target="40">0</h2>
-        <p>Cities Protected</p>
-      </div>
-
-      <div>
-        <h2 class="counter" data-target="12">0</h2>
-        <p>Years Experience</p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= INTERACTIVE SOLUTION DIAGRAM ================= -->
-<section style="padding:70px 0;background:#f7f9fb">
-  <div class="container">
-
-    <h2>Integrated Security Architecture</h2>
-
-    <div class="diagram">
-
-      <div class="diagram-node">Cameras</div>
-      <div class="diagram-node">Sensors</div>
-      <div class="diagram-node">Access Control</div>
-      <div class="diagram-node">Cloud Platform</div>
-      <div class="diagram-node">Mobile Monitoring</div>
-
-    </div>
-
-  </div>
-</section>
-
-<style>
-.diagram{
-  margin-top:30px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:20px;
-}
-
-.diagram-node{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  text-align:center;
-  font-weight:600;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08);
-  transition:transform .2s, box-shadow .2s;
-}
-
-.diagram-node:hover{
-  transform:translateY(-6px);
-  box-shadow:0 14px 30px rgba(0,0,0,0.12);
-}
-</style>
-
-
-<!-- ================= PRODUCT DETAIL PAGE TEMPLATE ================= -->
-<!-- Save a copy as product-camera.html etc -->
-<section style="padding:70px 0">
-  <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
-
-    <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f" style="width:100%;border-radius:12px">
-
-    <div>
-      <h2>4K AI Bullet Camera</h2>
-
-      <p>Enterprise grade outdoor surveillance camera with AI detection, night vision and weatherproof housing.</p>
-
-      <ul style="line-height:1.8;color:#555">
-        <li>4K Ultra HD resolution</li>
-        <li>AI human and vehicle detection</li>
-        <li>Night vision up to 40m</li>
-        <li>Weatherproof IP67 design</li>
-      </ul>
-
-      <a class="cta" href="#contact">Request Quote</a>
-
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ================= COUNTER SCRIPT ================= -->
-<script>
-const counters=document.querySelectorAll('.counter');
-
-counters.forEach(counter=>{
-  const update=()=>{
-    const target=+counter.getAttribute('data-target');
-    const current=+counter.innerText;
-
-    const inc=target/120;
-
-    if(current<target){
-      counter.innerText=Math.ceil(current+inc);
-      setTimeout(update,20);
-    }else{
-      counter.innerText=target;
-    }
-  };
-
-  update();
-});
-</script>
-
-
-
-
-<!-- ================= HERO BANNER WITH SWITCHING BACKGROUND ================= -->
-<section class="hero-banner">
-  <div class="hero-overlay">
-    <div class="container">
-      <h1>Intelligent Security Infrastructure</h1>
-      <p>Enterprise video surveillance, smart sensors and access control for modern organizations.</p>
-      <a class="cta" href="#solutions">Explore Solutions</a>
-    </div>
-  </div>
-</section>
-
-<style>
-.hero-banner{
-  position:relative;
-  height:520px;
-  background-size:cover;
-  background-position:center;
-  animation:heroSwitch 18s infinite;
-}
-
-.hero-overlay{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.45);
-  display:flex;
-  align-items:center;
-  color:white;
-}
-
-.hero-overlay h1{
-  font-size:44px;
-  margin-bottom:12px;
-}
-
-.hero-overlay p{
-  max-width:600px;
-  font-size:18px;
-}
-
-@keyframes heroSwitch{
-  0%{background-image:url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d');}
-  33%{background-image:url('https://images.unsplash.com/photo-1498050108023-c5249f4df085');}
-  66%{background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475');}
-  100%{background-image:url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d');}
-}
-</style>
-
-
-<!-- ================= INDUSTRY SOLUTION PAGES SECTION ================= -->
-<section style="padding:70px 0;background:#f7f9fb">
-  <div class="container">
-
-    <h2>Industry Solutions</h2>
-    <p style="max-width:700px;color:#555">Security systems designed for specific industries including logistics, finance, manufacturing and smart cities.</p>
-
-    <div class="industry-grid">
-
-      <a class="industry-card" href="industries-factory.html">
-        <h3>Manufacturing</h3>
-        <p>Factory monitoring, worker safety analytics and industrial surveillance.</p>
-      </a>
-
-      <a class="industry-card" href="industries-warehouse.html">
-        <h3>Warehousing & Logistics</h3>
-        <p>Loading dock monitoring, inventory protection and vehicle tracking.</p>
-      </a>
-
-      <a class="industry-card" href="industries-banking.html">
-        <h3>Banking</h3>
-        <p>High security access control and financial institution surveillance.</p>
-      </a>
-
-      <a class="industry-card" href="industries-retail.html">
-        <h3>Retail</h3>
-        <p>Loss prevention, customer analytics and store monitoring.</p>
-      </a>
-
-    </div>
-
-  </div>
-</section>
-
-<style>
-.industry-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px;
-  margin-top:30px;
-}
-
-.industry-card{
-  background:white;
-  padding:26px;
-  border-radius:12px;
-  text-decoration:none;
-  color:black;
-  box-shadow:0 8px 20px rgba(0,0,0,0.08);
-  transition:transform .25s, box-shadow .25s;
-}
-
-.industry-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 16px 30px rgba(0,0,0,0.12);
-}
-
-.industry-card h3{
-  margin-top:0;
-}
-</style>
-
-
-<!-- ================= INDUSTRY PAGE TEMPLATE ================= -->
-<!-- Copy and save as industries-factory.html etc -->
-<section style="padding:70px 0">
-  <div class="container" style="max-width:1000px">
-
-    <h1>Manufacturing Security Solutions</h1>
-
-    <p>Factories require continuous monitoring, worker safety systems and perimeter protection. Our systems integrate AI cameras, environmental sensors and access control for full industrial visibility.</p>
-
-    <ul style="line-height:1.9;color:#555">
-      <li>AI cameras monitoring production lines</li>
-      <li>Worker safety detection</li>
-      <li>Vehicle entry management</li>
-      <li>Central monitoring dashboards</li>
-    </ul>
-
-    <a class="cta" href="#contact">Request Industry Consultation</a>
-
-  </div>
-</section>
-
-
-</body>
-</html>
-
-
-<!-- ================= SOLUTIONS PAGE ================= -->
-<!-- Save as solutions.html in the same repo -->
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Solutions — iStratech</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:Inter,system-ui;margin:0;background:#f7f9fb}
-.container{max-width:1200px;margin:auto;padding:40px 20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-.card{background:white;padding:24px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
-h1{margin-bottom:10px}
-p{color:#555}
-a{color:#0b4da2;text-decoration:none;font-weight:600}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Security Solutions</h1>
-<p>Systems designed for real environments including factories, warehouses, offices and smart cities.</p>
-
-<div class="grid">
-<div class="card">
-<h3>Video Surveillance</h3>
-<p>AI cameras, remote monitoring, and large‑scale NVR infrastructure.</p>
-</div>
-
-<div class="card">
-<h3>Access Control</h3>
-<p>Card readers, biometric authentication and cloud based door management.</p>
-</div>
-
-<div class="card">
-<h3>Smart Parking</h3>
-<p>Parking sensors, vehicle detection and license plate recognition.</p>
-</div>
-
-<div class="card">
-<h3>Industrial Monitoring</h3>
-<p>Environmental sensors and safety monitoring for industrial facilities.</p>
-</div>
-</div>
-
-<br>
-<a href="index.html">← Back to Home</a>
-</div>
-</body>
-</html>
-
-
-<!-- ================= PRODUCTS PAGE ================= -->
-<!-- Save as products.html -->
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Products — iStratech</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:Inter;margin:0;background:#f7f9fb}
-.container{max-width:1200px;margin:auto;padding:40px 20px}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.product{background:white;padding:16px;border-radius:12px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
-.product img{width:100%;height:160px;object-fit:cover;border-radius:8px}
-h4{margin:10px 0 4px}
-p{color:#666;font-size:14px}
-a{color:#0b4da2;text-decoration:none;font-weight:600}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Products</h1>
-<p>Cameras, recorders and smart sensors for enterprise security.</p>
-
-<div class="products">
-<div class="product">
-<img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f" />
-<h4>Bullet Camera</h4>
-<p>Outdoor 4K security camera</p>
-</div>
-
-<div class="product">
-<img src="https://images.unsplash.com/photo-1555617117-08fda6edc6d0" />
-<h4>Dome Camera</h4>
-<p>Compact indoor surveillance</p>
-</div>
-
-<div class="product">
-<img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" />
-<h4>Network Video Recorder</h4>
-<p>Centralized recording server</p>
-</div>
-
-<div class="product">
-<img src="https://images.unsplash.com/photo-1581091215367-59ab6b0d0c82" />
-<h4>Presence Sensor</h4>
-<p>Smart detection IoT device</p>
-</div>
-</div>
-
-<br>
-<a href="index.html">← Back to Home</a>
-</div>
-</body>
-</html>
-
-
-<!-- ================= SUPPORT PAGE ================= -->
-<!-- Save as support.html -->
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Support — iStratech</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:Inter;margin:0;background:#f7f9fb}
-.container{max-width:1000px;margin:auto;padding:40px 20px}
-.card{background:white;padding:24px;border-radius:12px;margin-bottom:20px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
-h1{margin-bottom:10px}
-p{color:#555}
-a{color:#0b4da2;text-decoration:none;font-weight:600}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Support Center</h1>
-<p>Documentation, firmware downloads and technical help.</p>
-
-<div class="card">
-<h3>Documentation</h3>
-<p>Installation manuals and product datasheets.</p>
-</div>
-
-<div class="card">
-<h3>Firmware & Software</h3>
-<p>Latest firmware updates and security patches.</p>
-</div>
-
-<div class="card">
-<h3>Technical Support</h3>
-<p>Email: support@istratech.example.com</p>
-</div>
-
-<a href="index.html">← Back to Home</a>
-</div>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.5;
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Form submission handler
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will contact you shortly.');
+            e.target.reset();
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + '+';
+                }
+            }, 30);
+        }
+
+        // Trigger counter animation when hero is visible
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.textContent);
+                        animateCounter(stat, target);
+                    });
+                    heroObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        heroObserver.observe(document.querySelector('.hero'));
+    </script>
 </body>
 </html>
