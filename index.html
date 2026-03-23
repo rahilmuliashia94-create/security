@@ -18,22 +18,23 @@
           );
         }
       }(window.location))
-    </script>
-    <script type="module" crossorigin src="./assets/index-Bs0mItmB.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-B57ClfSU.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
-<script>
+   <script>
 window.addEventListener("load", () => {
-  setTimeout(() => {
+  const removeSections = () => {
     document.querySelectorAll("section").forEach(section => {
+
       if (section.textContent.includes("Trusted by leading")) {
         section.remove();
       }
+
+      if (section.textContent.includes("Our Leadership Team")) {
+        section.remove();
+      }
+
     });
-  }, 1000);
+  };
+
+  removeSections();
+  setTimeout(removeSections, 1000);
 });
 </script>
