@@ -1044,10 +1044,15 @@ tbody tr.selected{ background:rgba(34,197,94,0.1); }
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<script>
-// ==================== DATA ====================
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-let accounts = [
+<script>
+const SUPABASE_URL = "https://fxjkkfbnwwtjgxrelais.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4amtrZmJud3d0amd4cmVsYWlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MTI5ODMsImV4cCI6MjA5MDA4ODk4M30.Sq7rMpHGv7ws1zCe4NBzqlKYsAAtK1Pi-hKZhfRNQbA";
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const fallbackAccounts = [
   { id: 1, companyName: "TechCorp Solutions", username: "techadmin", email: "admin@techcorp.com", password: "TechPass123!", price: 299.99, paymentTerm: "monthly", status: "active", autoRenew: true, address: "123 Tech Street, Silicon Valley, CA", createdDate: "2024-01-15", lastInvoice: "2024-12-01" },
   { id: 2, companyName: "Global Finance Ltd", username: "globalfin", email: "contact@globalfin.com", password: "FinSecure456!", price: 499.99, paymentTerm: "quarterly", status: "active", autoRenew: true, address: "456 Finance Ave, New York, NY", createdDate: "2024-02-20", lastInvoice: "2024-10-01" },
   { id: 3, companyName: "RetailMax Stores", username: "retailmax", email: "support@retailmax.com", password: "Retail789!", price: 149.99, paymentTerm: "monthly", status: "suspended", autoRenew: false, address: "789 Retail Blvd, Chicago, IL", createdDate: "2024-03-10", lastInvoice: "2024-09-01" },
@@ -1060,329 +1065,442 @@ let accounts = [
   { id: 10, companyName: "Logistics Express", username: "logiex", email: "dispatch@logiex.com", password: "LogiEx789!", price: 449.99, paymentTerm: "quarterly", status: "active", autoRenew: true, address: "333 Transport Ave, Dallas, TX", createdDate: "2024-10-01", lastInvoice: "2024-10-01" }
 ];
 
+let accounts = [...fallbackAccounts];
 let selectedAccounts = new Set();
 let currentAccountId = null;
 let editingAccount = false;
 
-// ==================== INITIALIZATION ====================
+function generateId() {
+  return (crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function normalizeId(id) {
+  return String(id ?? "");
+}
+
+function dbRowToAccount(row) {
+  return {
+    id: row.id,
+    companyName: row.company_name ?? row.companyName ?? "",
+    username: row.username ?? "",
+    email: row.email ?? "",
+    password: row.password ?? "",
+    price: Number(row.price ?? 0),
+    paymentTerm: row.payment_term ?? row.paymentTerm ?? "monthly",
+    status: row.status ?? "active",
+    autoRenew: Boolean(row.auto_renew ?? row.autoRenew ?? true),
+    address: row.address ?? "",
+    createdDate: (row.created_at ?? row.createdDate ?? new Date().toISOString()).toString().slice(0, 10),
+    lastInvoice: row.last_invoice ?? row.lastInvoice ?? null
+  };
+}
+
+function accountToDbRow(account) {
+  return {
+    id: account.id ?? generateId(),
+    user_id: account.user_id ?? null,
+    company_name: account.companyName ?? "",
+    username: account.username ?? "",
+    email: account.email ?? "",
+    password: account.password ?? "",
+    price: Number(account.price ?? 0),
+    payment_term: account.paymentTerm ?? "monthly",
+    status: account.status ?? "active",
+    auto_renew: Boolean(account.autoRenew ?? true),
+    address: account.address ?? "",
+    created_at: account.createdDate ? new Date(account.createdDate).toISOString() : new Date().toISOString(),
+    last_invoice: account.lastInvoice ? String(account.lastInvoice).slice(0, 10) : null
+  };
+}
+
+async function seedFallbackAccounts() {
+  const rows = fallbackAccounts.map(a => ({
+    id: generateId(),
+    company_name: a.companyName,
+    username: a.username,
+    email: a.email,
+    password: a.password,
+    price: a.price,
+    payment_term: a.paymentTerm,
+    status: a.status,
+    auto_renew: a.autoRenew,
+    address: a.address,
+    created_at: a.createdDate ? new Date(a.createdDate).toISOString() : new Date().toISOString(),
+    last_invoice: a.lastInvoice ? String(a.lastInvoice).slice(0, 10) : null
+  }));
+
+  const { error } = await sb.from("accounts").insert(rows);
+  if (error) throw error;
+}
+
+async function loadAccounts() {
+  try {
+    const { data, error } = await sb
+      .from("accounts")
+      .select("*")
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      await seedFallbackAccounts();
+      const retry = await sb
+        .from("accounts")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+      if (retry.error) throw retry.error;
+      accounts = (retry.data || []).map(dbRowToAccount);
+    } else {
+      accounts = data.map(dbRowToAccount);
+    }
+  } catch (err) {
+    console.error("Supabase load failed; using fallback data.", err);
+    accounts = [...fallbackAccounts];
+  }
+
+  selectedAccounts.clear();
+  currentAccountId = null;
+  editingAccount = false;
+  renderAccounts();
+  updateStats();
+}
 
 function init() {
   renderAccounts();
   updateStats();
+  loadAccounts();
   
-  // Simulate real-time updates
   setInterval(() => {
-    // Randomly update stats slightly
     const stat = Math.random();
-    if (stat > 0.7) {
-      updateStats();
-    }
+    if (stat > 0.7) updateStats();
   }, 5000);
 }
 
-// ==================== STATS ====================
-
 function updateStats() {
   const total = accounts.length;
-  const active = accounts.filter(a => a.status === 'active').length;
-  const suspended = accounts.filter(a => a.status === 'suspended').length;
-  const revenue = accounts.filter(a => a.status === 'active').reduce((sum, a) => sum + a.price, 0);
-  
-  animateNumber('totalAccounts', total, '');
-  animateNumber('activeAccounts', active, '');
-  animateNumber('suspendedAccounts', suspended, '');
-  animateNumber('monthlyRevenue', revenue, '$');
+  const active = accounts.filter(a => a.status === "active").length;
+  const suspended = accounts.filter(a => a.status === "suspended").length;
+  const revenue = accounts
+    .filter(a => a.status === "active")
+    .reduce((sum, a) => sum + Number(a.price || 0), 0);
+
+  animateNumber("totalAccounts", total, "");
+  animateNumber("activeAccounts", active, "");
+  animateNumber("suspendedAccounts", suspended, "");
+  animateNumber("monthlyRevenue", revenue, "$");
 }
 
 function animateNumber(id, value, prefix) {
   const el = document.getElementById(id);
-  el.textContent = prefix + value.toLocaleString('en-US', { minimumFractionDigits: prefix === '$' ? 0 : 0, maximumFractionDigits: 0 });
+  if (!el) return;
+  el.textContent = prefix + Number(value).toLocaleString("en-US", {
+    minimumFractionDigits: prefix === "$" ? 0 : 0,
+    maximumFractionDigits: 0
+  });
 }
 
-// ==================== RENDER ACCOUNTS ====================
-
 function renderAccounts(filteredAccounts = null) {
-  const tbody = document.getElementById('accountsTableBody');
+  const tbody = document.getElementById("accountsTableBody");
   const data = filteredAccounts || accounts;
-  
-  tbody.innerHTML = data.map(account => `
-    <tr class="${selectedAccounts.has(account.id) ? 'selected' : ''}" data-id="${account.id}">
-      <td>
-        <div class="checkbox-wrap">
-          <input type="checkbox" ${selectedAccounts.has(account.id) ? 'checked' : ''} onchange="toggleAccountSelection(${account.id})">
-        </div>
-      </td>
-      <td>
-        <div class="company-cell">
-          <div class="company-avatar">${getInitials(account.companyName)}</div>
-          <div class="company-info">
-            <span class="company-name">${account.companyName}</span>
-            <span class="company-user">@${account.username}</span>
+
+  tbody.innerHTML = data.map(account => {
+    const id = normalizeId(account.id);
+    return `
+      <tr class="${selectedAccounts.has(id) ? "selected" : ""}" data-id="${id}">
+        <td>
+          <div class="checkbox-wrap">
+            <input type="checkbox" ${selectedAccounts.has(id) ? "checked" : ""} onchange="toggleAccountSelection('${id}')">
           </div>
-        </div>
-      </td>
-      <td>${account.email}</td>
-      <td style="font-weight:600;">$${account.price.toFixed(2)}</td>
-      <td>
-        <span class="term-badge term-${account.paymentTerm}">
-          ${getTermLabel(account.paymentTerm)}
-        </span>
-      </td>
-      <td>
-        <span class="status-badge status-${account.status}">
-          <span class="status-dot"></span>
-          ${account.status.charAt(0).toUpperCase() + account.status.slice(1)}
-        </span>
-      </td>
-      <td>
-        <span style="color:${account.autoRenew ? 'var(--accent)' : 'var(--muted)'}; font-size:13px;">
-          ${account.autoRenew ? '✓ On' : '✗ Off'}
-        </span>
-      </td>
-      <td>
-        <div class="action-dropdown">
-          <button class="action-btn" onclick="toggleDropdown(event, ${account.id})">⋮</button>
-          <div class="dropdown-menu" id="dropdown-${account.id}">
-            <div class="dropdown-item" onclick="viewAccount(${account.id})">👁 View Details</div>
-            <div class="dropdown-item" onclick="editAccount(${account.id})">✎ Edit Account</div>
-            <div class="dropdown-item" onclick="editPrice(${account.id})">$ Edit Price</div>
-            <div class="dropdown-item" onclick="resetPassword(${account.id})">🔑 Reset Password</div>
-            <div class="dropdown-item" onclick="sendReminder(${account.id})">📧 Send Reminder</div>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="toggleSuspend(${account.id})">${account.status === 'suspended' ? '▶ Activate' : '⏸ Suspend'}</div>
-            <div class="dropdown-item danger" onclick="deleteAccount(${account.id})">🗑 Delete Account</div>
+        </td>
+        <td>
+          <div class="company-cell">
+            <div class="company-avatar">${getInitials(account.companyName)}</div>
+            <div class="company-info">
+              <span class="company-name">${account.companyName}</span>
+              <span class="company-user">@${account.username}</span>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-  
-  document.getElementById('showingCount').textContent = data.length;
-  document.getElementById('totalCount').textContent = accounts.length;
+        </td>
+        <td>${account.email}</td>
+        <td style="font-weight:600;">$${Number(account.price || 0).toFixed(2)}</td>
+        <td>
+          <span class="term-badge term-${account.paymentTerm}">
+            ${getTermLabel(account.paymentTerm)}
+          </span>
+        </td>
+        <td>
+          <span class="status-badge status-${account.status}">
+            <span class="status-dot"></span>
+            ${account.status.charAt(0).toUpperCase() + account.status.slice(1)}
+          </span>
+        </td>
+        <td>
+          <span style="color:${account.autoRenew ? "var(--accent)" : "var(--muted)"}; font-size:13px;">
+            ${account.autoRenew ? "✓ On" : "✗ Off"}
+          </span>
+        </td>
+        <td>
+          <div class="action-dropdown">
+            <button class="action-btn" onclick="toggleDropdown(event, '${id}')">⋮</button>
+            <div class="dropdown-menu" id="dropdown-${id}">
+              <div class="dropdown-item" onclick="viewAccount('${id}')">👁 View Details</div>
+              <div class="dropdown-item" onclick="editAccount('${id}')">✎ Edit Account</div>
+              <div class="dropdown-item" onclick="editPrice('${id}')">$ Edit Price</div>
+              <div class="dropdown-item" onclick="resetPassword('${id}')">🔑 Reset Password</div>
+              <div class="dropdown-item" onclick="sendReminder('${id}')">📧 Send Reminder</div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item" onclick="toggleSuspend('${id}')">${account.status === "suspended" ? "▶ Activate" : "⏸ Suspend"}</div>
+              <div class="dropdown-item danger" onclick="deleteAccount('${id}')">🗑 Delete Account</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  document.getElementById("showingCount").textContent = data.length;
+  document.getElementById("totalCount").textContent = accounts.length;
 }
 
 function getInitials(name) {
-  return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  return String(name || "")
+    .split(" ")
+    .filter(Boolean)
+    .map(w => w[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
 }
 
 function getTermLabel(term) {
   const labels = {
-    monthly: 'Monthly',
-    quarterly: 'Quarterly',
-    '6months': '6 Months',
-    annual: 'Annual'
+    monthly: "Monthly",
+    quarterly: "Quarterly",
+    "6months": "6 Months",
+    annual: "Annual"
   };
   return labels[term] || term;
 }
 
-// ==================== FILTERING & SORTING ====================
-
 function filterAccounts() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  const term = document.getElementById('termFilter').value;
-  
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const status = document.getElementById("statusFilter").value;
+  const term = document.getElementById("termFilter").value;
+
   const filtered = accounts.filter(account => {
-    const matchesSearch = account.companyName.toLowerCase().includes(search) ||
-                         account.username.toLowerCase().includes(search) ||
-                         account.email.toLowerCase().includes(search);
+    const matchesSearch =
+      account.companyName.toLowerCase().includes(search) ||
+      account.username.toLowerCase().includes(search) ||
+      account.email.toLowerCase().includes(search);
+
     const matchesStatus = !status || account.status === status;
     const matchesTerm = !term || account.paymentTerm === term;
     return matchesSearch && matchesStatus && matchesTerm;
   });
-  
+
   renderAccounts(filtered);
 }
 
 function sortAccounts() {
-  const sort = document.getElementById('sortFilter').value;
-  
+  const sort = document.getElementById("sortFilter").value;
+
   const sorted = [...accounts].sort((a, b) => {
-    switch(sort) {
-      case 'newest': return new Date(b.createdDate) - new Date(a.createdDate);
-      case 'oldest': return new Date(a.createdDate) - new Date(b.createdDate);
-      case 'name': return a.companyName.localeCompare(b.companyName);
-      case 'price': return b.price - a.price;
+    switch (sort) {
+      case "newest": return new Date(b.createdDate) - new Date(a.createdDate);
+      case "oldest": return new Date(a.createdDate) - new Date(b.createdDate);
+      case "name": return a.companyName.localeCompare(b.companyName);
+      case "price": return Number(b.price || 0) - Number(a.price || 0);
       default: return 0;
     }
   });
-  
+
   renderAccounts(sorted);
 }
 
-// ==================== BULK SELECTION ====================
-
 function toggleAccountSelection(id) {
-  if (selectedAccounts.has(id)) {
-    selectedAccounts.delete(id);
-  } else {
-    selectedAccounts.add(id);
-  }
+  const key = normalizeId(id);
+  if (selectedAccounts.has(key)) selectedAccounts.delete(key);
+  else selectedAccounts.add(key);
+
   updateBulkActions();
   renderAccounts();
 }
 
 function toggleSelectAll() {
-  const checked = document.getElementById('selectAll').checked;
-  const visibleAccounts = document.querySelectorAll('#accountsTableBody tr');
-  
+  const checked = document.getElementById("selectAll").checked;
+  const visibleAccounts = document.querySelectorAll("#accountsTableBody tr");
+
   visibleAccounts.forEach(row => {
-    const id = parseInt(row.dataset.id);
-    if (checked) {
-      selectedAccounts.add(id);
-    } else {
-      selectedAccounts.delete(id);
-    }
+    const id = normalizeId(row.dataset.id);
+    if (checked) selectedAccounts.add(id);
+    else selectedAccounts.delete(id);
   });
-  
+
   updateBulkActions();
   renderAccounts();
 }
 
 function updateBulkActions() {
-  const bulkActions = document.getElementById('bulkActions');
+  const bulkActions = document.getElementById("bulkActions");
   const count = selectedAccounts.size;
-  
-  document.getElementById('selectedCount').textContent = count;
-  
+
+  document.getElementById("selectedCount").textContent = count;
+
   if (count > 0) {
-    bulkActions.classList.add('show');
+    bulkActions.classList.add("show");
   } else {
-    bulkActions.classList.remove('show');
-    document.getElementById('selectAll').checked = false;
+    bulkActions.classList.remove("show");
+    document.getElementById("selectAll").checked = false;
   }
 }
 
 function clearSelection() {
   selectedAccounts.clear();
-  document.getElementById('selectAll').checked = false;
+  document.getElementById("selectAll").checked = false;
   updateBulkActions();
   renderAccounts();
 }
 
-// ==================== BULK ACTIONS ====================
-
 function bulkSendReminder() {
-  showToast('success', 'Reminders Sent', `Sent to ${selectedAccounts.size} accounts`);
+  showToast("success", "Reminders Sent", `Sent to ${selectedAccounts.size} accounts`);
   clearSelection();
 }
 
-function bulkGenerateInvoice() {
-  showToast('success', 'Invoices Generated', `Created ${selectedAccounts.size} invoices`);
+async function bulkGenerateInvoice() {
+  if (selectedAccounts.size === 0) return;
+
+  showToast("success", "Invoices Generated", `Created ${selectedAccounts.size} invoices`);
   clearSelection();
 }
 
-function bulkSuspend() {
-  accounts = accounts.map(a => selectedAccounts.has(a.id) ? {...a, status: 'suspended'} : a);
-  renderAccounts();
-  updateStats();
-  showToast('success', 'Accounts Suspended', `${selectedAccounts.size} accounts suspended`);
-  clearSelection();
+async function bulkSuspend() {
+  if (selectedAccounts.size === 0) return;
+
+  try {
+    const ids = [...selectedAccounts];
+    const updates = ids.map(id => sb.from("accounts").update({ status: "suspended" }).eq("id", id));
+    const results = await Promise.all(updates);
+    const failed = results.find(r => r.error);
+    if (failed) throw failed.error;
+
+    showToast("success", "Accounts Suspended", `${selectedAccounts.size} accounts suspended`);
+    clearSelection();
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Suspend Failed", err.message || "Could not suspend accounts");
+  }
 }
 
-function bulkDelete() {
+async function bulkDelete() {
+  if (selectedAccounts.size === 0) return;
   if (!confirm(`Delete ${selectedAccounts.size} accounts? This cannot be undone.`)) return;
-  accounts = accounts.filter(a => !selectedAccounts.has(a.id));
-  renderAccounts();
-  updateStats();
-  showToast('success', 'Accounts Deleted', `${selectedAccounts.size} accounts deleted`);
-  clearSelection();
-}
 
-// ==================== DROPDOWN ====================
+  try {
+    const ids = [...selectedAccounts];
+    const { error } = await sb.from("accounts").delete().in("id", ids);
+    if (error) throw error;
+
+    showToast("success", "Accounts Deleted", `${selectedAccounts.size} accounts deleted`);
+    clearSelection();
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Delete Failed", err.message || "Could not delete accounts");
+  }
+}
 
 function toggleDropdown(event, id) {
   event.stopPropagation();
-  
-  // Close all other dropdowns
-  document.querySelectorAll('.dropdown-menu.show').forEach(d => {
-    if (d.id !== `dropdown-${id}`) d.classList.remove('show');
+
+  document.querySelectorAll(".dropdown-menu.show").forEach(d => {
+    if (d.id !== `dropdown-${id}`) d.classList.remove("show");
   });
-  
+
   const dropdown = document.getElementById(`dropdown-${id}`);
-  dropdown.classList.toggle('show');
+  dropdown.classList.toggle("show");
 }
 
-document.addEventListener('click', () => {
-  document.querySelectorAll('.dropdown-menu.show').forEach(d => d.classList.remove('show'));
+document.addEventListener("click", () => {
+  document.querySelectorAll(".dropdown-menu.show").forEach(d => d.classList.remove("show"));
 });
-
-// ==================== MODALS ====================
 
 function openAddModal() {
   editingAccount = false;
   currentAccountId = null;
-  document.getElementById('accountModalTitle').textContent = 'Add New Account';
-  document.getElementById('accountForm').reset();
-  document.getElementById('autoRenewToggle').classList.add('active');
-  document.getElementById('accountModal').classList.add('show');
+  document.getElementById("accountModalTitle").textContent = "Add New Account";
+  document.getElementById("accountForm").reset();
+  document.getElementById("autoRenewToggle").classList.add("active");
+  document.getElementById("accountModal").classList.add("show");
 }
 
 function closeAccountModal() {
-  document.getElementById('accountModal').classList.remove('show');
+  document.getElementById("accountModal").classList.remove("show");
 }
 
 function closeViewModal() {
-  document.getElementById('viewModal').classList.remove('show');
+  document.getElementById("viewModal").classList.remove("show");
 }
 
 function closeResetModal() {
-  document.getElementById('resetModal').classList.remove('show');
+  document.getElementById("resetModal").classList.remove("show");
 }
 
 function closeDeleteModal() {
-  document.getElementById('deleteModal').classList.remove('show');
+  document.getElementById("deleteModal").classList.remove("show");
 }
 
 function closePriceModal() {
-  document.getElementById('priceModal').classList.remove('show');
+  document.getElementById("priceModal").classList.remove("show");
 }
 
 function toggleSwitch(el) {
-  el.classList.toggle('active');
+  el.classList.toggle("active");
 }
 
-// ==================== CRUD OPERATIONS ====================
-
-function saveAccount() {
-  const form = document.getElementById('accountForm');
+async function saveAccount() {
+  const form = document.getElementById("accountForm");
   const formData = new FormData(form);
-  
+
+  const current = accounts.find(a => normalizeId(a.id) === normalizeId(currentAccountId));
+
   const accountData = {
-    id: editingAccount ? currentAccountId : Date.now(),
-    companyName: formData.get('companyName'),
-    username: formData.get('username'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-    price: parseFloat(formData.get('price')),
-    paymentTerm: formData.get('paymentTerm'),
-    status: formData.get('status'),
-    autoRenew: document.getElementById('autoRenewToggle').classList.contains('active'),
-    address: formData.get('address') || '',
-    createdDate: editingAccount ? accounts.find(a => a.id === currentAccountId)?.createdDate : new Date().toISOString().split('T')[0],
-    lastInvoice: editingAccount ? accounts.find(a => a.id === currentAccountId)?.lastInvoice : null
+    id: editingAccount && current ? current.id : generateId(),
+    user_id: current?.user_id ?? null,
+    companyName: formData.get("companyName"),
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    price: parseFloat(formData.get("price") || "0"),
+    paymentTerm: formData.get("paymentTerm") || "monthly",
+    status: formData.get("status") || "active",
+    autoRenew: document.getElementById("autoRenewToggle").classList.contains("active"),
+    address: formData.get("address") || "",
+    createdDate: editingAccount && current ? current.createdDate : new Date().toISOString().slice(0, 10),
+    lastInvoice: editingAccount && current ? current.lastInvoice : null
   };
-  
-  if (editingAccount) {
-    const index = accounts.findIndex(a => a.id === currentAccountId);
-    accounts[index] = accountData;
-    showToast('success', 'Account Updated', `${accountData.companyName} has been updated`);
-  } else {
-    accounts.push(accountData);
-    showToast('success', 'Account Created', `${accountData.companyName} has been added`);
+
+  try {
+    const row = accountToDbRow(accountData);
+    const { error } = await sb.from("accounts").upsert([row], { onConflict: "id" });
+    if (error) throw error;
+
+    showToast("success", editingAccount ? "Account Updated" : "Account Created", `${accountData.companyName} has been saved`);
+    closeAccountModal();
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Save Failed", err.message || "Could not save account");
   }
-  
-  renderAccounts();
-  updateStats();
-  closeAccountModal();
 }
 
 function viewAccount(id) {
-  currentAccountId = id;
-  const account = accounts.find(a => a.id === id);
+  currentAccountId = normalizeId(id);
+  const account = accounts.find(a => normalizeId(a.id) === currentAccountId);
   if (!account) return;
-  
-  document.getElementById('viewContent').innerHTML = `
+
+  document.getElementById("viewContent").innerHTML = `
     <div class="details-grid">
       <div class="detail-item">
         <div class="detail-label">Company Name</div>
@@ -1402,7 +1520,7 @@ function viewAccount(id) {
       </div>
       <div class="detail-item">
         <div class="detail-label">Price/Month</div>
-        <div class="detail-value">$${account.price.toFixed(2)}</div>
+        <div class="detail-value">$${Number(account.price || 0).toFixed(2)}</div>
       </div>
       <div class="detail-item">
         <div class="detail-label">Payment Term</div>
@@ -1418,7 +1536,7 @@ function viewAccount(id) {
       </div>
       <div class="detail-item">
         <div class="detail-label">Auto Renewal</div>
-        <div class="detail-value">${account.autoRenew ? 'Enabled ✓' : 'Disabled ✗'}</div>
+        <div class="detail-value">${account.autoRenew ? "Enabled ✓" : "Disabled ✗"}</div>
       </div>
       <div class="detail-item">
         <div class="detail-label">Created Date</div>
@@ -1426,16 +1544,16 @@ function viewAccount(id) {
       </div>
       <div class="detail-item">
         <div class="detail-label">Last Invoice</div>
-        <div class="detail-value">${account.lastInvoice ? formatDate(account.lastInvoice) : 'Never'}</div>
+        <div class="detail-value">${account.lastInvoice ? formatDate(account.lastInvoice) : "Never"}</div>
       </div>
     </div>
     <div class="detail-item" style="margin-top:16px;">
       <div class="detail-label">Address</div>
-      <div class="detail-value">${account.address || 'No address provided'}</div>
+      <div class="detail-value">${account.address || "No address provided"}</div>
     </div>
   `;
-  
-  document.getElementById('viewModal').classList.add('show');
+
+  document.getElementById("viewModal").classList.add("show");
 }
 
 function fromViewToEdit() {
@@ -1445,12 +1563,12 @@ function fromViewToEdit() {
 
 function editAccount(id) {
   editingAccount = true;
-  currentAccountId = id;
-  const account = accounts.find(a => a.id === id);
+  currentAccountId = normalizeId(id);
+  const account = accounts.find(a => normalizeId(a.id) === currentAccountId);
   if (!account) return;
-  
-  document.getElementById('accountModalTitle').textContent = 'Edit Account';
-  const form = document.getElementById('accountForm');
+
+  document.getElementById("accountModalTitle").textContent = "Edit Account";
+  const form = document.getElementById("accountForm");
   form.accountId.value = account.id;
   form.companyName.value = account.companyName;
   form.username.value = account.username;
@@ -1459,163 +1577,188 @@ function editAccount(id) {
   form.price.value = account.price;
   form.paymentTerm.value = account.paymentTerm;
   form.status.value = account.status;
-  form.address.value = account.address || '';
-  
-  const toggle = document.getElementById('autoRenewToggle');
-  if (account.autoRenew) toggle.classList.add('active');
-  else toggle.classList.remove('active');
-  
-  document.getElementById('accountModal').classList.add('show');
+  form.address.value = account.address || "";
+
+  const toggle = document.getElementById("autoRenewToggle");
+  if (account.autoRenew) toggle.classList.add("active");
+  else toggle.classList.remove("active");
+
+  document.getElementById("accountModal").classList.add("show");
 }
 
 function editPrice(id) {
-  currentAccountId = id;
-  const account = accounts.find(a => a.id === id);
+  currentAccountId = normalizeId(id);
+  const account = accounts.find(a => normalizeId(a.id) === currentAccountId);
   if (!account) return;
-  
-  document.getElementById('currentPriceDisplay').value = '$' + account.price.toFixed(2);
-  document.getElementById('newPrice').value = '';
-  document.getElementById('priceChangeReason').value = '';
-  document.getElementById('priceModal').classList.add('show');
+
+  document.getElementById("currentPriceDisplay").value = "$" + Number(account.price || 0).toFixed(2);
+  document.getElementById("newPrice").value = "";
+  document.getElementById("priceChangeReason").value = "";
+  document.getElementById("priceModal").classList.add("show");
 }
 
-function savePriceChange() {
-  const newPrice = parseFloat(document.getElementById('newPrice').value);
+async function savePriceChange() {
+  const newPrice = parseFloat(document.getElementById("newPrice").value);
   if (!newPrice || newPrice <= 0) {
-    showToast('error', 'Invalid Price', 'Please enter a valid price');
+    showToast("error", "Invalid Price", "Please enter a valid price");
     return;
   }
-  
-  const index = accounts.findIndex(a => a.id === currentAccountId);
-  if (index === -1) return;
-  
-  accounts[index].price = newPrice;
-  renderAccounts();
-  updateStats();
-  closePriceModal();
-  showToast('success', 'Price Updated', `New price: $${newPrice.toFixed(2)}`);
+
+  try {
+    const { error } = await sb.from("accounts").update({ price: newPrice }).eq("id", currentAccountId);
+    if (error) throw error;
+
+    closePriceModal();
+    showToast("success", "Price Updated", `New price: $${newPrice.toFixed(2)}`);
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Update Failed", err.message || "Could not update price");
+  }
 }
 
 function resetPassword(id) {
-  currentAccountId = id;
-  const account = accounts.find(a => a.id === id);
+  currentAccountId = normalizeId(id);
+  const account = accounts.find(a => normalizeId(a.id) === currentAccountId);
   if (!account) return;
-  
-  document.getElementById('resetAccountName').value = account.companyName;
-  document.getElementById('resetAccountEmail').value = account.email;
-  document.getElementById('resetModal').classList.add('show');
+
+  document.getElementById("resetAccountName").value = account.companyName;
+  document.getElementById("resetAccountEmail").value = account.email;
+  document.getElementById("resetModal").classList.add("show");
 }
 
-function confirmResetPassword() {
-  closeResetModal();
-  showToast('success', 'Password Reset', 'New password sent to email');
+async function confirmResetPassword() {
+  const newPassword = Math.random().toString(36).slice(-10);
+
+  try {
+    const { error } = await sb.from("accounts").update({ password: newPassword }).eq("id", currentAccountId);
+    if (error) throw error;
+
+    closeResetModal();
+    showToast("success", "Password Reset", `New temporary password: ${newPassword}`);
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Reset Failed", err.message || "Could not reset password");
+  }
 }
 
 function sendReminder(id) {
-  const account = accounts.find(a => a.id === id);
-  showToast('success', 'Reminder Sent', `Payment reminder sent to ${account.companyName}`);
+  const account = accounts.find(a => normalizeId(a.id) === normalizeId(id));
+  if (!account) return;
+  showToast("success", "Reminder Sent", `Payment reminder sent to ${account.companyName}`);
 }
 
-function toggleSuspend(id) {
-  const index = accounts.findIndex(a => a.id === id);
-  if (index === -1) return;
-  
-  const newStatus = accounts[index].status === 'suspended' ? 'active' : 'suspended';
-  accounts[index].status = newStatus;
-  
-  renderAccounts();
-  updateStats();
-  showToast('success', 'Status Changed', `Account ${newStatus === 'active' ? 'activated' : 'suspended'}`);
+async function toggleSuspend(id) {
+  const account = accounts.find(a => normalizeId(a.id) === normalizeId(id));
+  if (!account) return;
+
+  const newStatus = account.status === "suspended" ? "active" : "suspended";
+
+  try {
+    const { error } = await sb.from("accounts").update({ status: newStatus }).eq("id", normalizeId(id));
+    if (error) throw error;
+
+    showToast("success", "Status Changed", `Account ${newStatus === "active" ? "activated" : "suspended"}`);
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Update Failed", err.message || "Could not change status");
+  }
 }
 
 function deleteAccount(id) {
-  currentAccountId = id;
-  const account = accounts.find(a => a.id === id);
+  currentAccountId = normalizeId(id);
+  const account = accounts.find(a => normalizeId(a.id) === currentAccountId);
   if (!account) return;
-  
-  document.getElementById('deleteAccountName').value = account.companyName;
-  document.getElementById('deleteModal').classList.add('show');
+
+  document.getElementById("deleteAccountName").value = account.companyName;
+  document.getElementById("deleteModal").classList.add("show");
 }
 
-function confirmDelete() {
-  accounts = accounts.filter(a => a.id !== currentAccountId);
-  renderAccounts();
-  updateStats();
-  closeDeleteModal();
-  showToast('success', 'Account Deleted', 'Account has been permanently deleted');
+async function confirmDelete() {
+  try {
+    const { error } = await sb.from("accounts").delete().eq("id", currentAccountId);
+    if (error) throw error;
+
+    closeDeleteModal();
+    showToast("success", "Account Deleted", "Account has been permanently deleted");
+    await loadAccounts();
+  } catch (err) {
+    console.error(err);
+    showToast("error", "Delete Failed", err.message || "Could not delete account");
+  }
 }
 
 function generateInvoiceForAccount() {
   closeViewModal();
-  showToast('success', 'Invoice Generated', 'Invoice created for this account');
+  showToast("success", "Invoice Generated", "Invoice created for this account");
 }
-
-// ==================== EXPORT ====================
 
 function exportAccounts() {
   const csv = [
-    ['Company', 'Username', 'Email', 'Price', 'Term', 'Status', 'Auto Renew', 'Created'].join(','),
+    ["Company", "Username", "Email", "Price", "Term", "Status", "Auto Renew", "Created"].join(","),
     ...accounts.map(a => [
-      `"${a.companyName}"`, `"${a.username}"`, `"${a.email}"`, a.price, a.paymentTerm, a.status, a.autoRenew, a.createdDate
-    ].join(','))
-  ].join('\n');
-  
-  const blob = new Blob([csv], { type: 'text/csv' });
+      `"${a.companyName}"`,
+      `"${a.username}"`,
+      `"${a.email}"`,
+      Number(a.price || 0),
+      a.paymentTerm,
+      a.status,
+      a.autoRenew,
+      a.createdDate
+    ].join(","))
+  ].join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `accounts_export_${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = `accounts_export_${new Date().toISOString().split("T")[0]}.csv`;
   a.click();
   URL.revokeObjectURL(url);
-  
-  showToast('success', 'Export Complete', 'Accounts exported to CSV');
+
+  showToast("success", "Export Complete", "Accounts exported to CSV");
 }
 
-// ==================== UTILITIES ====================
-
 function formatDate(dateStr) {
-  if (!dateStr) return '-';
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  if (!dateStr) return "-";
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 function showToast(type, title, message) {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.innerHTML = `
-    <div class="icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ'}</div>
+    <div class="icon">${type === "success" ? "✅" : type === "error" ? "❌" : "ℹ"}</div>
     <div class="content">
       <div class="title">${title}</div>
       <div class="message">${message}</div>
     </div>
   `;
-  
+
   container.appendChild(toast);
-  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.add("show"), 10);
   setTimeout(() => {
-    toast.classList.remove('show');
+    toast.classList.remove("show");
     setTimeout(() => toast.remove(), 300);
   }, 4000);
 }
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    document.querySelectorAll(".modal-overlay.show").forEach(m => m.classList.remove("show"));
   }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
     e.preventDefault();
-    document.getElementById('searchInput').focus();
+    document.getElementById("searchInput").focus();
   }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
     e.preventDefault();
     openAddModal();
   }
 });
 
-// Initialize
 init();
 </script>
-
-</body>
-</html>
