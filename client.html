@@ -358,117 +358,82 @@
   <!-- Small modals / toasts -->
   <div id="toast" style="position:fixed;right:20px;bottom:20px;background:#21343a;color:#fff;padding:10px 14px;border-radius:10px;display:none;box-shadow:0 10px 30px rgba(0,0,0,0.2)"></div>
 
-<script>
-/* ---------------------------
-   Demo data and rendering
-   --------------------------- */
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const invoices = [
-  {id:'INV-0035', status:'REQ', due:'Jul 15, 2025', amount:6600},
-  {id:'INV-0029', status:'REQ', due:'Jan 11, 2024', amount:6000},
-  {id:'INV-0023', status:'REQ', due:'Feb 9, 2024', amount:6000},
-  {id:'INV-0017', status:'REQ', due:'Oct 1, 2024', amount:6000},
-];
+const supabase = createClient(
+  "https://fxjkkfbnwwtjgxrelais.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+);
 
-function renderInvoices(){
-  const tbody = document.getElementById('recentInvoicesBody');
-  tbody.innerHTML = '';
-  invoices.forEach(inv=>{
-    const tr = document.createElement('tr');
-    const statusLabel = inv.status === 'REQ'? '<span class="status-badge status-req">REQ</span>' : (inv.status === 'PAID' ? '<span class="status-badge status-paid">PAID</span>' : '<span class="status-badge status-due">DUE</span>');
-    tr.innerHTML = `<td>${inv.id}</td><td>${statusLabel}</td><td>₹${inv.amount.toLocaleString()}<div class="small-muted" style="margin-top:6px">${inv.due}</div></td>`;
+// 🔐 Get logged-in user
+const client = JSON.parse(localStorage.getItem("client"));
+
+if (!client) {
+  alert("Not logged in");
+  window.location.href = "/";
+}
+
+// 📥 Load client data
+async function loadClient() {
+  const { data, error } = await supabase
+    .from("accounts")
+    .select("*")
+    .eq("username", client.username)
+    .single();
+
+  if (error || !data) {
+    alert("Client not found");
+    return;
+  }
+
+  // 💰 Update Amount Due
+  document.getElementById("dueAmount").innerText = data.amount_due || 0;
+
+  // 👤 Update name (sidebar)
+  document.querySelector(".sidebar div").innerText = data.username;
+
+  // 📄 Load invoices
+  loadInvoices(data.username);
+}
+
+// 📄 Load invoices for THIS client
+async function loadInvoices(username) {
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("*")
+    .eq("username", username);
+
+  const tbody = document.getElementById("recentInvoicesBody");
+  tbody.innerHTML = "";
+
+  if (!data) return;
+
+  data.forEach(inv => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${inv.invoice_id}</td>
+      <td><span class="status-badge ${inv.status === "PAID" ? "status-paid" : "status-due"}">${inv.status}</span></td>
+      <td>₹${inv.amount}<div class="small-muted">${inv.due_date}</div></td>
+    `;
+
     tbody.appendChild(tr);
   });
 }
 
-/* ---------------------------
-   Donut chart (Invoices Overview)
-   --------------------------- */
-function buildDonut(){
-  const ctx = document.getElementById('invoiceDonut').getContext('2d');
-  // enforce size and prevent expansion
-  document.getElementById('invoiceDonut').style.maxHeight = '120px';
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Paid','Pending'],
-      datasets: [{
-        data: [67,33],
-        backgroundColor: ['#22c55e','#f59e0b'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      cutout: '70%',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {legend:{display:false}, tooltip:{callbacks:{label:function(ctx){ return ctx.label + ': ' + (ctx.raw===67? '₹12,000':'₹6,000'); }}}},
-      animation:false
-    }
-  });
-}
+// 💳 Pay button (later Razorpay)
+document.getElementById("payNowBtn").onclick = () => {
+  alert("Payment system coming next step");
+};
 
-/* ---------------------------
-   Small area status chart
-   --------------------------- */
-function buildArea(){
-  const ctx = document.getElementById('statusArea').getContext('2d');
-  document.getElementById('statusArea').style.maxHeight = '86px';
-  new Chart(ctx, {
-    type:'line',
-    data:{
-      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
-      datasets:[{
-        data:[20,40,30,55,45,65,58],
-        fill: true,
-        backgroundColor: 'linear-gradient(180deg,rgba(34,197,94,0.16),rgba(34,197,94,0.02))',
-        borderColor:'#22c55e',
-        tension:0.35,
-        pointRadius:0
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{x:{display:false}, y:{display:false}},
-      elements:{line:{borderWidth:2}},
-      animation:false
-    }
-  });
-}
+// 📥 Download invoice
+document.getElementById("downloadInvoiceBtn").onclick = () => {
+  alert("PDF system coming next");
+};
 
-/* ---------------------------
-   Buttons / interactions
-   --------------------------- */
-document.getElementById('downloadInvoiceBtn').addEventListener('click', ()=> {
-  // simulate invoice download (text file)
-  const invoiceText = `Invoice: INV-0035\nAmount Due: ₹${document.getElementById('dueAmount').innerText}\nDue Date: July 15, 2024\nThank you for using Everest Security.`;
-  const blob = new Blob([invoiceText], {type:'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'INV-0035.txt';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  showToast('Invoice downloaded (demo)');
-});
-
-document.getElementById('payNowBtn').addEventListener('click', ()=> {
-  showToast('Payment dialog (simulated). We do not process payments in demo.');
-});
-
-/* small toast */
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.style.display = 'block';
-  setTimeout(()=> t.style.opacity='1', 10);
-  setTimeout(()=> { t.style.opacity='0'; setTimeout(()=> t.style.display='none',250)}, 2200);
-}
-
-/* init */
-renderInvoices();
-buildDonut();
-buildArea();
-
+// 🚀 INIT
+loadClient();
 </script>
 </body>
 </html>
