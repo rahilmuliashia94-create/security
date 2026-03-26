@@ -18,18 +18,20 @@
           );
         }
       }(window.location))
-    </script>
-    <script type="module" crossorigin src="./assets/index-Bs0mItmB.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-B57ClfSU.css">
-  </head>
-  <script>
+  <body>
+    <div id="root"></div>
+        <script>
+let redirected = false;
+
 setInterval(() => {
-  if (window.location.hash !== "#/login") {
+  // detect if login form is gone (means user logged in)
+  const loginBox = document.querySelector('input[placeholder="Enter your username"]');
+
+  if (!loginBox && !redirected) {
+    redirected = true;
     window.location.href = "/client.html";
   }
 }, 1000);
 </script>
-  <body>
-    <div id="root"></div>
   </body>
 </html>
